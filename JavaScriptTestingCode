@@ -22,3 +22,4 @@ if (check Warranted/Unwarranted == Warranted) {
 
     print("The price of service is " + service_price + "hryuven")
 
+bulshit
