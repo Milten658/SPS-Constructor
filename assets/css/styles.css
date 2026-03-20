@@ -4,6 +4,7 @@
     --accent-remont-color: #00C472;
     --accent-obmin-color:  #B71B33;
     --dark-text-color: #888888;
+    --dropdown-bg: #161616;
 }
 body{
     margin: 0;
@@ -276,11 +277,11 @@ h3{
     color: var(--accent-obmin-color);
 }
 .posluga_form {
-    position: relative;  /* чтобы кнопка была выше */
+    position: relative; 
     z-index: 1;
-    height: 0;
+    max-height: 0;
     overflow: hidden;
-    transition: height 0.4s ease, padding 0.4s ease;
+    transition: max-height 0.6s ease, padding 0.4s ease;
     background-color: #181818;
     border-radius: 14px;
      border-top-right-radius: 0px;
@@ -289,8 +290,9 @@ h3{
     
 }
 .posluga_wrapper.active + .posluga_form {
+    max-height: 500px;
     padding: 6px 14px 18px 18px;
-    transition: height 0.4s ease, padding 0.4s ease;
+    transition: max-height 0.6s ease, padding 0.4s ease;
 }
 .wrapper_accordeon{
     margin-top: 10px;
@@ -299,11 +301,11 @@ h3{
     transition: border-color 0.4s ease;
 }
 #remont_accord:has(.posluga_wrapper.active) {
-    border-color: var(--accent-remont-color); /* активный цвет */
+    border-color: var(--accent-remont-color); 
     transition: border-color 0.4s ease;
 }
 #obmin_accord:has(.posluga_wrapper.active) {
-    border-color: var(--accent-obmin-color); /* активный цвет */
+    border-color: var(--accent-obmin-color); 
     transition: border-color 0.4s ease;
 }
 .little_p{
@@ -485,4 +487,48 @@ body.obmin #not_active_prices {
     font-size: 18px;
     font-weight: 700;
     color: var(--dark-text-color);
+}
+.dropdown_wrapper{
+    font-size: 16px;
+    display: flex;
+    flex-direction: column;
+}
+.dropdown_main{
+    width: 220px;
+    background-color: var(--dropdown-bg);
+    height: 35px;
+    margin: 5px 5px 0px 0px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0px 10px;
+    border: 1px solid var(--main-text-color);
+    border-radius: 12px;
+}
+.dropdown_arrow{
+    width: 30px;
+    height: 30px;
+}
+.dropdown_list {
+    width: 241px;
+    max-height: 0px;
+    transition: max-height 0.3s ease;
+    overflow: hidden;
+    background-color: #0f0f0f;
+    scrollbar-color: rgb(124, 124, 124) rgba(30, 30, 30, 0);
+  scrollbar-width:thin;
+  border-radius: 12px;
+  margin-top: 4px;
+}
+.dropdown_list.active {
+   max-height: 100px;
+   overflow-y: auto
+   
+}
+.dropdown_option{
+    padding: 1px 10px;
+}
+.dropdown_option:hover{
+background-color: #343434;
 }
