@@ -241,7 +241,6 @@ padding: 20px 22px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    position: relative;
     z-index: 2;
     align-items: center;
     width: 1;
@@ -279,20 +278,35 @@ h3{
 .posluga_form {
     position: relative; 
     z-index: 1;
-    max-height: 0;
+    height: 0;
     overflow: hidden;
-    transition: max-height 0.6s ease, padding 0.4s ease;
+    transition: height 0.4s ease, padding 0.4s ease;
     background-color: #181818;
     border-radius: 14px;
      border-top-right-radius: 0px;
     border-top-left-radius: 0px;
     padding: 0px 18px;
-    
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
 }
+
 .posluga_wrapper.active + .posluga_form {
-    max-height: 500px;
-    padding: 6px 14px 18px 18px;
-    transition: max-height 0.6s ease, padding 0.4s ease;
+    padding: 6px 18px 20px 18px;
+    animation: delayedOverflow 0.4s forwards;
+}
+
+@keyframes delayedOverflow {
+    0% {
+        overflow: hidden;
+    }
+    99% {
+        overflow: hidden;
+    }
+    100% {
+        overflow: visible;
+    }
 }
 .wrapper_accordeon{
     margin-top: 10px;
@@ -489,46 +503,154 @@ body.obmin #not_active_prices {
     color: var(--dark-text-color);
 }
 .dropdown_wrapper{
-    font-size: 16px;
+    font-size: 14px;
     display: flex;
     flex-direction: column;
+    position: relative;
+    width: 50%;
+    min-width: 45%;
+}
+#wide_dropdown_wrapper{
+    width: 100%;
+    min-width: 100%;
 }
 .dropdown_main{
-    width: 220px;
+    width: 100%;
     background-color: var(--dropdown-bg);
-    height: 35px;
+    height: 32px;
     margin: 5px 5px 0px 0px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    padding: 0px 10px;
-    border: 1px solid var(--main-text-color);
+    border: 1px solid #bdbdbd;
     border-radius: 12px;
+    position: relative;
+    cursor: pointer;
+    color: #C5C5C5;
 }
 .dropdown_arrow{
     width: 30px;
     height: 30px;
+    padding-right: 10px;
+}
+.check_row{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+    gap: 1%;
+    margin-top: 3px;
+}
+.templates_row{
+     display: flex;
+    flex-direction: row;
+    width: 100%;
+    margin-bottom: 18px;
+}
+.dropdown_fill{
+    padding-left: 10px;
 }
 .dropdown_list {
-    width: 241px;
+     position: absolute;
+     top: 100%;
+    left: 0;
+    width: 100%;
+   z-index: 100;
     max-height: 0px;
     transition: max-height 0.3s ease;
     overflow: hidden;
-    background-color: #0f0f0f;
-    scrollbar-color: rgb(124, 124, 124) rgba(30, 30, 30, 0);
+    background-color: black;
+    scrollbar-color: rgb(156, 156, 156) rgba(30, 30, 30, 0);
   scrollbar-width:thin;
   border-radius: 12px;
   margin-top: 4px;
+  font-size: 16px;
+
 }
 .dropdown_list.active {
-   max-height: 100px;
-   overflow-y: auto
+   max-height: 120px;
+   overflow-y: auto;
    
 }
 .dropdown_option{
-    padding: 1px 10px;
+    padding: 6px 10px;
+    cursor: pointer;
 }
 .dropdown_option:hover{
-background-color: #343434;
+background-color: var(--main-text-change-color);
+}
+.dropdown_labe_description{
+    font-size: 13px;
+    margin: 0;
+    margin-bottom: 1px;
+    margin-top: -1PX;
+    color: var(--dark-text-color);
+}
+.dropdown_label{
+    font-size: 18px;
+    font-weight: 500;
+    margin: 0;
+    padding: 0;
+}
+.type_checkbox {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+      opacity: 0.4;
+      transition: opacity 0.2s ease;
+}
+.type_checkbox:hover {
+ opacity: 1;
+}
+.type_checkbox:has(input:checked){
+    opacity: 1;
+    color: var(--main-text-change-color);
+}
+.type_checkbox input {
+  display: none;
+}
+.checkbox_wrapper{
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    width: 100%;
+    align-items: center;
+    font-size: 18px;
+    font-weight: 500;
+    width: 100%;
+}
+#top_check{
+    width: 100%;
+border-top: 1.7px solid #4F4F4F;
+padding: 5px 18px 0px 18px;
+}
+.custom_box {
+  width: 11px;
+  height: 11px;
+  border: 2px solid #333;
+  border-radius: 4px;
+  position: relative;
+  transition: all 0.2s ease;
+  top: 1px;
+}
+.type_checkbox input:checked + .checkbox_text + .custom_box {
+  background-color: var(--main-text-change-color);
+}
+.type_checkbox:hover .custom_box {
+  border-color: #666;
+}
+.type_checkbox:hover .checkbox_text {
+  color: var(--main-text-color);
+}
+.type_checkbox input:checked ~ .checkbox_text {
+  color: var(--main-text-change-color);
+}
+.warranty_wrapper{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding-bottom: 15px;
+    gap: 5px
 }
