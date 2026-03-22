@@ -1,5 +1,7 @@
 const options = document.querySelectorAll('.posluga_wrapper');
 const body = document.body;
+const search_input = document.querySelector('.top_search');
+const search_field = document.querySelector('.search_field');
 
 document.querySelectorAll('.dropdown_wrapper').forEach(wrapper => {
   const main = wrapper.querySelector('.dropdown_main');
@@ -71,3 +73,20 @@ document.addEventListener('click', () => {
     list.classList.remove('active');
   });
 });
+
+
+
+
+if (search_input && search_field) {
+
+  search_input.addEventListener('focus', () => {
+    search_field.classList.add('active');
+  });
+
+  search_input.addEventListener('blur', () => {
+    setTimeout(() => {
+      search_field.classList.remove('active');
+    }, 150);
+  });
+
+}
