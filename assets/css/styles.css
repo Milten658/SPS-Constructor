@@ -319,7 +319,9 @@ padding: 20px 22px;
    margin-right: 22px;
 }
 .device_img{
-    width: 50%;
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 8px;
 }
 .device_text{
     display: flex;
