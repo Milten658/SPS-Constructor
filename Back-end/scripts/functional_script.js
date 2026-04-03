@@ -41,6 +41,7 @@ const fetchDevices = async () => {
   devices = all.map((device) => {
     const line = SearchLineTemplate.content.cloneNode(true).children[0];
 
+    const image = line.querySelector("[line-device-image]");
     const model = line.querySelector("[line-device-model]");
     const department = line.querySelector("[line-device-department]");
     const price = line.querySelector("[line-device-price]");
@@ -50,6 +51,8 @@ const fetchDevices = async () => {
     price.textContent = device.price;
     department.textContent = "Відділ: " + device.Type.Department.department;
     articule.textContent = "Артикул: " + device.id;
+    image.src =
+      `https://jgyrkytxpdrozrfygpvl.supabase.co/storage/v1/object/public/device_images/${device.image}`;
 
     SearchLineContainer.append(line);
     return {
