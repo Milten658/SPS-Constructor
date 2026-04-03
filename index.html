@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="assets/css/styles.css">
+    <!-- <script src="Back-end/scripts/functional_script.js" defer></script> -->
     <title>Configurator</title>
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=filter_alt" />
@@ -36,167 +37,39 @@
                     <div class="search_dropdown_wrapper">
                         <div class="searchbar">
                             <input type="text" placeholder="Оберіть пристрій до якого хочете придбати послугу"
-                                class="top_search">
+                                class="top_search" device-search>
                             <button class="search_button">
                                 <i></i>
                                 <p>Знайти</p>
                             </button>
 
                         </div>
-                        <div class="search_field">
-                                <div class="search_field_element">
+                        <div class="search_field" search-line-container>
+
+                                <template search-device-temp>
+                                    <div class="search_field_element">
                                     <div class="search_element_img">
                                         <img src="assets/images/plus-sign.png" alt="" class="device_img">
                                     </div>
                                     <div class="element_text">
                                         <div class="search_element_main_text">
-                                            <h2 class="search_element_name">
-                                                Для початку конфігурації послуги, оберіть пристрій до якого хочете
-                                                придбати
-                                                послугу
+                                            <h2 class="search_element_name" line-device-model>
+                                                
                                             </h2>
                                             <div class="search_element_atribute_container">
-                                                <p class="atribute">Відділ: Скоро дізнаємось</p>
-                                                <p class="atribute">Артикул: Поки що немає</p>
+                                                <p class="atribute" line-device-department></p>
+                                                <p class="atribute" line-device-articule></p>
+                            
                                             </div>
                                         </div>
                                         <div class="search_element_price_text">
-                                            <p class="price_label">Ціна:</p>
-                                            <p class="price_calc">fffffffffffо</p>
+                                            <p class="price_label">Ціна: </p>
+                                            <p class="price_calc" line-device-price></p>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="search_field_element">
-                                    <div class="search_element_img">
-                                        <img src="assets/images/plus-sign.png" alt="" class="device_img">
-                                    </div>
-                                    <div class="element_text">
-                                        <div class="search_element_main_text">
-                                            <h2 class="search_element_name">
-                                                Для початку конфігурації послуги, оберіть пристрій до якого хочете
-                                                придбати
-                                                послугу
-                                            </h2>
-                                            <div class="search_element_atribute_container">
-                                                <p class="atribute">Відділ: Скоро дізнаємось</p>
-                                                <p class="atribute">Артикул: Поки що немає</p>
-                                            </div>
-                                        </div>
-                                        <div class="search_element_price_text">
-                                            <p class="price_label">Ціна:</p>
-                                            <p class="price_calc">fffffffffffо</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="search_field_element">
-                                    <div class="search_element_img">
-                                        <img src="assets/images/plus-sign.png" alt="" class="device_img">
-                                    </div>
-                                    <div class="element_text">
-                                        <div class="search_element_main_text">
-                                            <h2 class="search_element_name">
-                                                Для початку конфігурації послуги, оберіть пристрій до якого хочете
-                                                придбати
-                                                послугу
-                                            </h2>
-                                            <div class="search_element_atribute_container">
-                                                <p class="atribute">Відділ: Скоро дізнаємось</p>
-                                                <p class="atribute">Артикул: Поки що немає</p>
-                                            </div>
-                                        </div>
-                                        <div class="search_element_price_text">
-                                            <p class="price_label">Ціна:</p>
-                                            <p class="price_calc">fffffffffffо</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="search_field_element">
-                                    <div class="search_element_img">
-                                        <img src="assets/images/plus-sign.png" alt="" class="device_img">
-                                    </div>
-                                    <div class="element_text">
-                                        <div class="search_element_main_text">
-                                            <h2 class="search_element_name">
-                                                Для початку конфігурації послуги, оберіть пристрій до якого хочете
-                                                придбати
-                                                послугу
-                                            </h2>
-                                            <div class="search_element_atribute_container">
-                                                <p class="atribute">Відділ: Скоро дізнаємось</p>
-                                                <p class="atribute">Артикул: Поки що немає</p>
-                                            </div>
-                                        </div>
-                                        <div class="search_element_price_text">
-                                            <p class="price_label">Ціна:</p>
-                                            <p class="price_calc">fffffffffffо</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="search_field_element">
-                                    <div class="search_element_img">
-                                        <img src="assets/images/plus-sign.png" alt="" class="device_img">
-                                    </div>
-                                    <div class="element_text">
-                                        <div class="search_element_main_text">
-                                            <h2 class="search_element_name">
-                                                Для початку конфігурації послуги, оберіть пристрій до якого хочете
-                                                придбати
-                                                послугу
-                                            </h2>
-                                            <div class="search_element_atribute_container">
-                                                <p class="atribute">Відділ: Скоро дізнаємось</p>
-                                                <p class="atribute">Артикул: Поки що немає</p>
-                                            </div>
-                                        </div>
-                                        <div class="search_element_price_text">
-                                            <p class="price_label">Ціна:</p>
-                                            <p class="price_calc">fffffffffffо</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="search_field_element">
-                                    <div class="search_element_img">
-                                        <img src="assets/images/plus-sign.png" alt="" class="device_img">
-                                    </div>
-                                    <div class="element_text">
-                                        <div class="search_element_main_text">
-                                            <h2 class="search_element_name">
-                                                Для початку конфігурації послуги, оберіть пристрій до якого хочете
-                                                придбати
-                                                послугу
-                                            </h2>
-                                            <div class="search_element_atribute_container">
-                                                <p class="atribute">Відділ: Скоро дізнаємось</p>
-                                                <p class="atribute">Артикул: Поки що немає</p>
-                                            </div>
-                                        </div>
-                                        <div class="search_element_price_text">
-                                            <p class="price_label">Ціна:</p>
-                                            <p class="price_calc">fffffffffffо</p>
-                                        </div>
-                                    </div>
-                                </div><div class="search_field_element">
-                                    <div class="search_element_img">
-                                        <img src="assets/images/plus-sign.png" alt="" class="device_img">
-                                    </div>
-                                    <div class="element_text">
-                                        <div class="search_element_main_text">
-                                            <h2 class="search_element_name">
-                                                Для початку конфігурації послуги, оберіть пристрій до якого хочете
-                                                придбати
-                                                послугу
-                                            </h2>
-                                            <div class="search_element_atribute_container">
-                                                <p class="atribute">Відділ: Скоро дізнаємось</p>
-                                                <p class="atribute">Артикул: Поки що немає</p>
-                                            </div>
-                                        </div>
-                                        <div class="search_element_price_text">
-                                            <p class="price_label">Ціна:</p>
-                                            <p class="price_calc">fffffffffffо</p>
-                                        </div>
-                                    </div>
-                                </div>
+                                </template>
+
                         </div>
                     </div>
                     <button class="filters">
@@ -563,6 +436,7 @@
     </div>
     </section>
     <script src="assets/scripts/visual_script.js"></script>
+    <script type="module" src="Back-end/scripts/functional_script.js"></script>
 </body>
 
 </html>
