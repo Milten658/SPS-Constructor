@@ -15,7 +15,7 @@ document.querySelectorAll('.dropdown_wrapper').forEach(wrapper => {
       const l = w.querySelector('.dropdown_list');
       if (l && l !== list) {
         l.classList.remove('active');
-      }
+      } 
     });
 
     list.classList.toggle('active');
