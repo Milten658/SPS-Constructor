@@ -1,5 +1,3 @@
-const options = document.querySelectorAll('.posluga_wrapper');
-const body = document.body;
 const search_input = document.querySelector('.top_search');
 const search_field = document.querySelector('.search_field');
 
@@ -29,45 +27,6 @@ document.querySelectorAll('.dropdown_wrapper').forEach(wrapper => {
   });
 });
 
-options.forEach(option => {
-  option.addEventListener('click', () => {
-
-    const form = option.nextElementSibling;
-    const isOpen = option.classList.contains('active');
-
-    options.forEach(o => {
-      o.classList.remove('active');
-
-      const f = o.nextElementSibling;
-      if (f) {
-        f.style.height = '0px';
-      }
-    });
-
-    body.classList.remove('remont', 'obmin');
-
-    if (!isOpen) {
-      option.classList.add('active');
-
-      const name = option.dataset.name;
-      if (name) {
-        body.classList.add(name);
-      }
-
-      form.style.height = 'auto';
-      const height = form.scrollHeight;
-
-      form.style.height = '0px';
-
-      requestAnimationFrame(() => {
-        form.style.height = height + 'px';
-      });
-
-    } else {
-      form.style.height = '0px';
-    }
-  });
-});
 document.addEventListener('click', () => {
   document.querySelectorAll('.dropdown_list').forEach(list => {
     list.classList.remove('active');
