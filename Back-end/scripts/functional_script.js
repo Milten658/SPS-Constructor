@@ -10,6 +10,8 @@ const SearchLineTemplate = document.querySelector("[search-device-temp]");
 const SearchLineContainer = document.querySelector("[search-line-container]");
 const InputSearch = document.querySelector("[device-search]");
 
+//const s = document.querySelector("[device-search]");
+
 const pageSize = 1000;
 
 let devices = [];
@@ -51,8 +53,7 @@ const fetchDevices = async () => {
     price.textContent = device.price;
     department.textContent = "Відділ: " + device.Type.Department.department;
     articule.textContent = "Артикул: " + device.id;
-    image.src =
-      `https://jgyrkytxpdrozrfygpvl.supabase.co/storage/v1/object/public/device_images/${device.image}`;
+    image.src = `https://jgyrkytxpdrozrfygpvl.supabase.co/storage/v1/object/public/device_images/${device.image}`;
 
     SearchLineContainer.append(line);
     return {
@@ -77,3 +78,29 @@ InputSearch.addEventListener("input", (e) => {
 });
 
 fetchDevices();
+
+const device_form = document.querySelector(".device_info_form");
+
+SearchLineContainer.addEventListener("pointerup", (e) => {
+  const device = e.target.closest(".search_field_element");
+  if (!device) {
+    console.log("click not found");
+    return;
+  }
+
+  device_form.querySelector(".device_name").textContent = device.querySelector(
+    "[line-device-model]",
+  ).textContent;
+  device_form.querySelector("[department]").textContent = device.querySelector(
+    "[line-device-department]",
+  ).textContent;
+  device_form.querySelector("[articule]").textContent = device.querySelector(
+    "[line-device-articule]",
+  ).textContent;
+  device_form.querySelector(".price_calc").textContent = device.querySelector(
+    "[line-device-price]",
+  ).textContent;
+  device_form.querySelector(".device_img").src = device.querySelector(
+    "[line-device-image]",
+  ).src;
+});
