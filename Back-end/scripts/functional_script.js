@@ -105,4 +105,19 @@ SearchLineContainer.addEventListener("pointerup", (e) => {
   device_form.querySelector(".device_img").src = device.querySelector(
     "[line-device-image]",
   ).src;
+  updateProgress();
 });
+function updateProgress() {
+  const priceCalc = document.querySelector('.price_calc');
+  const progressBar = document.querySelector('.progress_bar');
+
+  if (!priceCalc || !progressBar) return;
+
+  const priceValue = parseFloat(priceCalc.textContent.trim());
+
+  progressBar.classList.remove('stage_1', 'stage_2', 'stage_3', 'stage_4');
+
+  if (!isNaN(priceValue)) {
+    progressBar.classList.add('stage_1');
+  }
+}
