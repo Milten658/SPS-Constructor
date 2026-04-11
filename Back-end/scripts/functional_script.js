@@ -65,6 +65,8 @@ const fetchDevices = async () => {
   });
 };
 
+//const UpdateProgress
+
 InputSearch.addEventListener("input", (e) => {
   const value = e.target.value.toLowerCase();
   devices.forEach((device) => {
