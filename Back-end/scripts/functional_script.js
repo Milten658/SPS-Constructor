@@ -87,7 +87,7 @@ function updateProgress() {
   ) {
     progressBar.classList.remove("stage_1", "stage_2", "stage_3", "stage_4");
     progressBar.classList.add("stage_2");
-    progressText.textContent = "2/4 для продовження, оберіть тип послуги";
+    progressText.textContent = "2/4 для продовження, оберіть між Гарантійними та Негарантійними випадками";
 
     return;
   }
@@ -134,6 +134,7 @@ SearchLineContainer.addEventListener("pointerup", (e) => {
   ).src;
   updateProgress();
   side_form.classList.add("active");
+  document.querySelector(".config_container").classList.add("active");
 });
 
 options.forEach((option) => {
