@@ -187,6 +187,7 @@ SearchLineContainer.addEventListener("pointerup", (e) => {
   updateProgress();
   side_form.classList.add("active");
   document.querySelector(".config_container").classList.add("active");
+  document.querySelector(".remont_warning_text").classList.remove("active");
 
   const text_id = device_form.querySelector("[articule]").textContent;
   fetchIncomps(parseInt(text_id.replace(/\D/g, ""), 10));
@@ -197,6 +198,10 @@ options.forEach((option) => {
   option.addEventListener("click", () => {
     const form = option.nextElementSibling;
     const isOpen = option.classList.contains("active");
+    let config_wrapper = document.querySelector(".config_container");
+    if (!config_wrapper.classList.contains("active")) {
+      document.querySelector(".remont_warning_text").classList.add("active");
+    }
 
     options.forEach((o) => {
       o.classList.remove("active");
@@ -238,18 +243,28 @@ options.forEach((option) => {
   });
 });
 
-
-
-
+//Warranty checkboxes interactions
 document
   .querySelectorAll('input[type="checkbox"][data-controls]')
   .forEach((cb) => {
-    document.querySelectorAll(cb.dataset.controls).forEach((list) => {
-      list.classList.add("disabled")
-      
+    const current_box = cb.closest(".posluga_form");
+    current_box.querySelectorAll(cb.dataset.controls).forEach((list) => {
       cb.addEventListener("change", () => {
-        list.classList.toggle("disabled");
+        list.classList.toggle("active");
 
+        let check = true;
+        current_box.querySelectorAll('input[type="checkbox"]').forEach((cb) => {
+          if (!cb.checked) {
+            check = false;
+          }
+        });
+
+        console.log(check);
+        if (check) {
+          current_box.querySelector(".other").classList.add("active");
+        } else {
+          current_box.querySelector(".other").classList.remove("active");
+        }
       });
     });
   });
@@ -269,7 +284,7 @@ document.querySelectorAll(".dropdown_wrapper").forEach((wrapper) => {
       }
     });
 
-    if (!main.classList.contains("disabled")) {
+    if (wrapper.classList.contains("active")) {
       list.classList.toggle("active");
     }
   });
