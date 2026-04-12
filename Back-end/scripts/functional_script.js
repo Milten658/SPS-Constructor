@@ -99,27 +99,44 @@ function updateProgress() {
 const fetchIncomps = async (device_id) => {
   console.log("Fetching info for device " + device_id);
 
-  const { device_error, device_data } = await supabase
+  const { error, data } = await supabase
     .from("Devices")
-    .select("*")
+    .select("*, Type (*)")
     .eq("id", device_id)
     .single();
 
-  if (device_error) {
-    console.log("Error of data extraction:" + device_error.message);
+  if (error) {
+    console.log("Error of data extraction:" + error.message);
     return;
   }
-  if (device_data) {
-    console.log(device_data);
 
-    const { inc_error, inc_data } = await supabase
+  const device_type = data.type;
+  const device_brand = data.brand;
+  const device_price = parseInt(data.price);
+  const device_model = data.model;
+  const device_department = data.Type.department;
+
+  console.log(data);
+
+  if (data) {
+    const { error, data } = await supabase
       .from("Incompatabilities")
       .select("*")
-      .match({
-        type: device_data.type,
-        model: device_data.model,
-        
-      });
+      .or(`type.eq.${device_type},type.is.null`)
+      .or(`brand.eq.${device_brand},brand.is.null`)
+      .or(`model.eq.${device_model},model.is.null`)
+      .or(`department.eq.${device_department},department.is.null`)
+      .or(`lower_price_limit.lte.${device_price},lower_price_limit.is.null`)
+      .or(`upper_price_limit.gte.${device_price},upper_price_limit.is.null`);
+
+    if (error) {
+      console.log("Error of data extraction:" + error.message);
+      return;
+    }
+
+    if (data.id) {
+      console.log(data);
+    }
   }
 };
 
