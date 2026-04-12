@@ -96,6 +96,7 @@ function updateProgress() {
   }
 }
 
+//fetches the incompatabilities table
 const fetchIncomps = async (device_id) => {
   console.log("Fetching info for device " + device_id);
 
@@ -133,10 +134,7 @@ const fetchIncomps = async (device_id) => {
       console.log("Error of data extraction:" + error.message);
       return;
     }
-
-    if (data.id) {
-      console.log(data);
-    }
+    console.log(data);
   }
 };
 
@@ -159,7 +157,7 @@ const device_form = document.querySelector(".device_info_form");
 const side_form = document.querySelector(".side_form");
 
 // picking the device from the searchlist and filling the page with it's info
-//initiating the fillment of services dropdown-lists and accounting for incompatabilities
+// initiating the fillment of services dropdown-lists and accounting for incompatabilities
 SearchLineContainer.addEventListener("pointerup", (e) => {
   const device = e.target.closest(".search_field_element");
   if (!device) {
@@ -237,5 +235,55 @@ options.forEach((option) => {
 
       updateProgress();
     }
+  });
+});
+
+
+
+
+document
+  .querySelectorAll('input[type="checkbox"][data-controls]')
+  .forEach((cb) => {
+    document.querySelectorAll(cb.dataset.controls).forEach((list) => {
+      list.classList.add("disabled")
+      
+      cb.addEventListener("change", () => {
+        list.classList.toggle("disabled");
+
+      });
+    });
+  });
+
+document.querySelectorAll(".dropdown_wrapper").forEach((wrapper) => {
+  const main = wrapper.querySelector(".dropdown_main");
+  const list = wrapper.querySelector(".dropdown_list");
+  const fill = wrapper.querySelector(".dropdown_fill");
+
+  main.addEventListener("click", (e) => {
+    e.stopPropagation();
+
+    document.querySelectorAll(".dropdown_wrapper").forEach((w) => {
+      const l = w.querySelector(".dropdown_list");
+      if (l && l !== list) {
+        l.classList.remove("active");
+      }
+    });
+
+    if (!main.classList.contains("disabled")) {
+      list.classList.toggle("active");
+    }
+  });
+
+  list.addEventListener("click", (e) => {
+    if (e.target.classList.contains("dropdown_option")) {
+      fill.textContent = e.target.textContent;
+      list.classList.remove("active");
+    }
+  });
+});
+
+document.addEventListener("click", () => {
+  document.querySelectorAll(".dropdown_list").forEach((list) => {
+    list.classList.remove("active");
   });
 });
