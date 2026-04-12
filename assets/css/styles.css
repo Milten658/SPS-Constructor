@@ -16,6 +16,32 @@ body{
      font-size: 16px;
      color: var(--main-text-color);
 }
+.obmin_warning_text{
+    font-size: 12px;
+    padding: 0;
+    margin: 0;
+    margin-left: 20px;
+    margin-bottom: -10px;
+    margin-top: 5px;
+    color: rgb(241, 11, 73);
+    display: none;
+}
+.remont_warning_text{
+    font-size: 12px;
+    padding: 0;
+    margin: 0;
+    margin-left: 20px;
+    margin-bottom: -10px;
+    margin-top: 5px;
+    color: rgb(241, 11, 73);
+    display: none;
+}
+.remont_warning_text.active{
+    display: block;
+}
+.obmin_warning_text.active{
+    display: block;
+}
 .material-symbols-rounded {
   font-variation-settings:
   'FILL' 1,
@@ -389,15 +415,17 @@ padding: 20px 22px;
     align-items: center;
     width: 1;
     height: 52px;
-    background-color: #1d1d1d;
-    border-radius: 14px;
+    background-color: #101010;
+    border-radius: 12px;
     cursor: pointer;
     padding: 0px 18px;
     transition: all 0.3s ease;
 }
-.posluga_wrapper:hover {
-    background-color: #242424;
-    border-color: #777;
+.config_container.active .posluga_wrapper{
+    background-color: #1d1d1d;
+}
+.config_container.active .posluga_wrapper:hover {
+    background-color: #383838;
 }
 .posluga_wrapper.active {
     border-bottom-right-radius: 0px;
@@ -406,17 +434,29 @@ padding: 20px 22px;
     transition: all 0.3s ease;
    
 }
-    
+   .posluga_wrapper p{
+    font-size: 16px
+   } 
 h3{
     font-size: 22px;
 }
 .config_label{
     margin-bottom: 5px;
+    color: #5b5b5b;
+}
+.config_container.active .config_label {
+color: #f7f7f7;
 }
 #remont_wrapper{
+    color: #16513d;
+}
+.config_container.active #remont_wrapper{
     color: var(--accent-remont-color);
 }
 #obmin_wrapper{
+    color: rgb(77, 19, 26);
+}
+.config_container.active #obmin_wrapper{
     color: var(--accent-obmin-color);
 }
 .posluga_form {
@@ -454,9 +494,12 @@ h3{
 }
 .wrapper_accordeon{
     margin-top: 10px;
-    border: 2px solid #4B4B4B;
+    border: 2px solid #161616;
     border-radius: 14px;
     transition: border-color 0.4s ease;
+}
+.config_container.active .wrapper_accordeon{
+    border: 2px solid #4B4B4B;
 }
 #remont_accord:has(.posluga_wrapper.active) {
     border-color: var(--accent-remont-color); 
@@ -568,22 +611,19 @@ body.obmin .obmin-text {
    display: flex;
     flex-direction: column;
     gap: 15px;
+    justify-content: space-between;
     display: none;
 }
-body.remont #calculated_prices{
+
+.side_form.active #calculated_prices{
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
-body.obmin #calculated_prices{
-  display: flex;
-}
-body.remont #not_active_prices {
+.side_form.active #not_active_prices {
   display: none;
 }
-body.obmin #not_active_prices {
-  display: none;
-}
+
 .choose_device_icon{
     height: 70px;
 }
@@ -664,6 +704,11 @@ body.obmin #not_active_prices {
     position: relative;
     width: 50%;
     min-width: 45%;
+    opacity: 0.4;
+    transition: all 0.4 ease;
+}
+.dropdown_wrapper.active{
+     opacity: 1
 }
 #wide_dropdown_wrapper{
     width: 100%;
@@ -810,6 +855,9 @@ padding: 5px 18px 0px 18px;
     gap: 5px
 }
 .warning{
+    display: none;
+}
+.config_container.active .warning{
     display: flex;
     align-items: center;
     height: 36px;
