@@ -17,6 +17,7 @@ const pageSize = 1000;
 
 let devices = [];
 
+// filling up the search options
 const fetchDevices = async () => {
   let all = [];
   let from = 0;
@@ -66,6 +67,7 @@ const fetchDevices = async () => {
   });
 };
 
+//moving the progress bar on the page
 function updateProgress() {
   const progressText = document.querySelector("#progress_text");
 
@@ -87,12 +89,41 @@ function updateProgress() {
   ) {
     progressBar.classList.remove("stage_1", "stage_2", "stage_3", "stage_4");
     progressBar.classList.add("stage_2");
-    progressText.textContent = "2/4 для продовження, оберіть між Гарантійними та Негарантійними випадками";
+    progressText.textContent =
+      "2/4 для продовження, оберіть між Гарантійними та Негарантійними випадками";
 
     return;
   }
 }
 
+const fetchIncomps = async (device_id) => {
+  console.log("Fetching info for device " + device_id);
+
+  const { device_error, device_data } = await supabase
+    .from("Devices")
+    .select("*")
+    .eq("id", device_id)
+    .single();
+
+  if (device_error) {
+    console.log("Error of data extraction:" + device_error.message);
+    return;
+  }
+  if (device_data) {
+    console.log(device_data);
+
+    const { inc_error, inc_data } = await supabase
+      .from("Incompatabilities")
+      .select("*")
+      .match({
+        type: device_data.type,
+        model: device_data.model,
+        
+      });
+  }
+};
+
+//search algorythm, that hides results that do not match with User's input
 InputSearch.addEventListener("input", (e) => {
   const value = e.target.value.toLowerCase();
   devices.forEach((device) => {
@@ -110,6 +141,8 @@ fetchDevices();
 const device_form = document.querySelector(".device_info_form");
 const side_form = document.querySelector(".side_form");
 
+// picking the device from the searchlist and filling the page with it's info
+//initiating the fillment of services dropdown-lists and accounting for incompatabilities
 SearchLineContainer.addEventListener("pointerup", (e) => {
   const device = e.target.closest(".search_field_element");
   if (!device) {
@@ -132,11 +165,19 @@ SearchLineContainer.addEventListener("pointerup", (e) => {
   device_form.querySelector(".device_img").src = device.querySelector(
     "[line-device-image]",
   ).src;
+
+  document.querySelector("#device_value").textContent =
+    device.querySelector("[line-device-price]").textContent + "₴";
+
   updateProgress();
   side_form.classList.add("active");
   document.querySelector(".config_container").classList.add("active");
+
+  const text_id = device_form.querySelector("[articule]").textContent;
+  fetchIncomps(parseInt(text_id.replace(/\D/g, ""), 10));
 });
 
+// opening the service boxes of War/Unwar
 options.forEach((option) => {
   option.addEventListener("click", () => {
     const form = option.nextElementSibling;
@@ -151,7 +192,10 @@ options.forEach((option) => {
       }
     });
 
-    if (progressBar.classList.contains("stage_1") || progressBar.classList.contains("stage_2")) {
+    if (
+      progressBar.classList.contains("stage_1") ||
+      progressBar.classList.contains("stage_2")
+    ) {
       body.classList.remove("remont", "obmin");
 
       if (!isOpen) {
