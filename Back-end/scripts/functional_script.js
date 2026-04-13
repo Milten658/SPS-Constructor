@@ -75,12 +75,22 @@ function updateProgress() {
   progressBar.classList.add("stage_1");
   progressText.textContent = "1/4 для продовження, оберіть тип послуги";
 
+let check = false;
+        document.querySelectorAll('input[type="checkbox"]').forEach((cb) => {
+          if (cb.checked) {
+            check = true;
+          }
+        });
+
   if (false) {
     //stage 4?
 
     return;
-  } else if (false) {
-    //stage 3?
+  } else if (check) {
+    progressBar.classList.remove("stage_1", "stage_2", "stage_3", "stage_4");
+    progressBar.classList.add("stage_3");
+    progressText.textContent =
+      "3/4 для продовження, оберіть бажані параметри послуг";
 
     return;
   } else if (
@@ -258,7 +268,7 @@ document
             check = false;
           }
         });
-
+        updateProgress();
         console.log(check);
         if (check) {
           current_box.querySelector(".other").classList.add("active");
