@@ -122,7 +122,7 @@
                         <h1 class="config_label">Конфігуратор послуг</h1>
                         <h4 class="remont_warning_text">Спочатку оберіть девайс</h4>
                         <div class="wrapper_accordeon" id="remont_accord">
-                            <div class="posluga_wrapper" data-name="remont" id="remont_wrapper">
+                            <div class="posluga_wrapper allow" data-name="remont" id="remont_wrapper">
                                 <h3>Послуга по ремонту техніки</h3>
                                 <p>додати</p>
                             </div>
@@ -134,13 +134,13 @@
                                             Рекомендовані нами вже налаштовані послуги
                                         </p>
                                         <div class="dropdown_main" id="remont_template_dropdown">
-                                            <p class="dropdown_fill">Оберіть шаблон</p>
+                                            <p class="dropdown_fill" price_index="">Оберіть шаблон</p>
                                             <img src="assets\images\arrow_drop_down.svg" alt="a" class="dropdown_arrow">
                                         </div>
-                                        <div class="dropdown_list">
-                                            <div class="dropdown_option">Ligma</div>
-                                            <div class="dropdown_option">Ligmab</div>
-                                            <div class="dropdown_option">Ligmad</div>
+                                        <div class="dropdown_list" id="rem_temp">
+                                        <template id="dropdown_template">
+                                            <div class="dropdown_option" id="dd_option" price_index=""></div>
+                                        </template>
                                         </div>
 
                                     </div>
@@ -162,7 +162,7 @@
                                                 <img src="assets\images\arrow_drop_down.svg" alt="a"
                                                     class="dropdown_arrow">
                                             </div>
-                                            <div class="dropdown_list">
+                                            <div class="dropdown_list" id="rem_w_period">
                                                 <div class="dropdown_option">6 місяців</div>
                                                 <div class="dropdown_option">12 місяців</div>
                                                 <div class="dropdown_option">24 місяці</div>
@@ -177,7 +177,7 @@
                                                 <img src="assets\images\arrow_drop_down.svg" alt="a"
                                                     class="dropdown_arrow">
                                             </div>
-                                            <div class="dropdown_list">
+                                            <div class="dropdown_list" id="rem_w_number">
                                                 <div class="dropdown_option">1</div>
                                                 <div class="dropdown_option">2</div>
                                                 <div class="dropdown_option">3</div>
@@ -193,11 +193,8 @@
                                             <p class="dropdown_fill">Початок дії сервісу</p>
                                             <img src="assets\images\arrow_drop_down.svg" alt="a" class="dropdown_arrow">
                                         </div>
-                                        <div class="dropdown_list">
-                                            <div class="dropdown_option">Одразу після купівлі послуги в магазині</div>
-                                            <div class="dropdown_option">Після закінчення гарантії від виробника</div>
-                                            <div class="dropdown_option">Після закінчення нашого негарантійного
-                                                обслуговування </div>
+                                        <div class="dropdown_list" id="rem_combo">
+                                        <div>LIGMALIGMASUGMABALLSBALLSBALLS</div>
                                         </div>
 
                                     </div>
@@ -205,7 +202,7 @@
                                 </div>
 
 
-                                <div class="checkbox_wrapper">
+                                <div class="checkbox_wrapper" id="unw_rem_check">
                                     <label class="type_checkbox">
                                         <input type="checkbox" id="remont_check" data-controls="#unw_list">
                                         <span class="checkbox_text">Негарантійні ремонти</span>
@@ -218,7 +215,7 @@
                                             <p class="dropdown_fill">Термін дії гарантії</p>
                                             <img src="assets\images\arrow_drop_down.svg" alt="a" class="dropdown_arrow">
                                         </div>
-                                        <div class="dropdown_list">
+                                        <div class="dropdown_list" id="rem_unw_period">
                                             <div class="dropdown_option">6 місяців</div>
                                             <div class="dropdown_option">12 місяців</div>
                                             <div class="dropdown_option">24 місяці</div>
@@ -232,7 +229,7 @@
                                             <p class="dropdown_fill">Кількість ремонтів</p>
                                             <img src="assets\images\arrow_drop_down.svg" alt="a" class="dropdown_arrow">
                                         </div>
-                                        <div class="dropdown_list">
+                                        <div class="dropdown_list" id="rem_unw_number">
                                             <div class="dropdown_option">1</div>
                                             <div class="dropdown_option">2</div>
                                             <div class="dropdown_option">3</div>
@@ -248,7 +245,7 @@
                         </div>
 <h4 class="obmin_warning_text">Спочатку оберіть девайс</h4>
                         <div class="wrapper_accordeon" id="obmin_accord">
-                            <div class="posluga_wrapper" data-name="obmin" id="obmin_wrapper">
+                            <div class="posluga_wrapper allow" data-name="obmin" id="obmin_wrapper">
                                 <h3>Послуга по обміну техніки</h3>
                                 <p>додати</p>
                             </div>
@@ -263,22 +260,18 @@
                                             <p class="dropdown_fill">Оберіть шаблон</p>
                                             <img src="assets\images\arrow_drop_down.svg" alt="a" class="dropdown_arrow">
                                         </div>
-                                        <div class="dropdown_list">
+                                        <div class="dropdown_list" id="obm_temp">
                                             <div class="dropdown_option">Ligma</div>
                                             <div class="dropdown_option">Ligmab</div>
                                             <div class="dropdown_option">Ligmad</div>
                                             <div class="dropdown_option">Ligmac</div>
-                                            <div class="dropdown_option">Ligmad</div>
-                                            <div class="dropdown_option">Ligmac</div>
-                                            <div class="dropdown_option">Ligmaa</div>
-                                            <div class="dropdown_option">Ligmaz</div>
                                         </div>
 
                                     </div>
                                 </div>
                                 <div class="checkbox_wrapper" id="top_check">
                                     <label class="type_checkbox" id="remont_check">
-                                        <input type="checkbox" data-controls="#w_list">
+                                        <input type="checkbox" data-controls="#w_list" id="w_obm_check">
                                         <span class="checkbox_text">Гарантійні ремонти</span>
                                         <span class="custom_box"></span>
                                     </label>
@@ -293,7 +286,7 @@
                                                 <img src="assets\images\arrow_drop_down.svg" alt="a"
                                                     class="dropdown_arrow">
                                             </div>
-                                            <div class="dropdown_list">
+                                            <div class="dropdown_list" id="obm_w_period">
                                                 <div class="dropdown_option">6 місяців</div>
                                                 <div class="dropdown_option">12 місяців</div>
                                                 <div class="dropdown_option">24 місяці</div>
@@ -308,7 +301,7 @@
                                                 <img src="assets\images\arrow_drop_down.svg" alt="a"
                                                     class="dropdown_arrow">
                                             </div>
-                                            <div class="dropdown_list">
+                                            <div class="dropdown_list" id="obm_w_number">
                                                 <div class="dropdown_option">1</div>
                                                 <div class="dropdown_option">2</div>
                                                 <div class="dropdown_option">3</div>
@@ -324,7 +317,7 @@
                                             <p class="dropdown_fill">Початок дії сервісу</p>
                                             <img src="assets\images\arrow_drop_down.svg" alt="a" class="dropdown_arrow">
                                         </div>
-                                        <div class="dropdown_list">
+                                        <div class="dropdown_list" id="obm_combo">
                                             <div class="dropdown_option">Одразу після купівлі послуги в магазині</div>
                                             <div class="dropdown_option">Після закінчення гарантії від виробника</div>
                                             <div class="dropdown_option">Після закінчення нашого негарантійного
@@ -337,7 +330,7 @@
 
 
                                 <div class="checkbox_wrapper">
-                                    <label class="type_checkbox">
+                                    <label class="type_checkbox"  id="unw_obm_check">
                                         <input type="checkbox" id="remont_check" data-controls="#unw_list">
                                         <span class="checkbox_text">Негарантійні ремонти</span>
                                         <span class="custom_box"></span>
@@ -349,7 +342,7 @@
                                             <p class="dropdown_fill">Термін дії гарантії</p>
                                             <img src="assets\images\arrow_drop_down.svg" alt="a" class="dropdown_arrow">
                                         </div>
-                                        <div class="dropdown_list">
+                                        <div class="dropdown_list" id="obm_unw_period">
                                             <div class="dropdown_option">6 місяців</div>
                                             <div class="dropdown_option">12 місяців</div>
                                             <div class="dropdown_option">24 місяці</div>
@@ -363,7 +356,7 @@
                                             <p class="dropdown_fill">Кількість ремонтів</p>
                                             <img src="assets\images\arrow_drop_down.svg" alt="a" class="dropdown_arrow">
                                         </div>
-                                        <div class="dropdown_list">
+                                        <div class="dropdown_list" id="obm_unw_number">
                                             <div class="dropdown_option">1</div>
                                             <div class="dropdown_option">2</div>
                                             <div class="dropdown_option">3</div>

@@ -9,6 +9,8 @@ const SearchLineTemplate = document.querySelector("[search-device-temp]");
 const SearchLineContainer = document.querySelector("[search-line-container]");
 const InputSearch = document.querySelector("[device-search]");
 
+const DropdownOptionTemplate = document.querySelector("#dropdown_template");
+
 const progressBar = document.querySelector(".progress_bar");
 const options = document.querySelectorAll(".posluga_wrapper");
 const body = document.body;
@@ -106,22 +108,166 @@ function updateProgress() {
   }
 }
 
-//
-async function fetchAndFillTheList(tableName, bannedList) {
-  let query = supabase.from(tableName).select("*");
+//function that fills the list with given data
+function fillList(list, data, banned, columns) {
+  list.innerHTML = "";
+  data.forEach((row) => {
+    if (!banned.includes(row.id)) {
+      const line = DropdownOptionTemplate.content.cloneNode(true).children[0];
 
-  if (bannedList.length > 0) {
-    const list = `(${bannedList.join(",")})`;
-    query = query.not("id", "in", list);
+      line.setAttribute("price_index", `${row[columns[0]]}`);
+      line.textContent = row[columns[1]];
+
+      list.append(line);
+    }
+  });
+}
+
+//the manager that processes the banlist, fetches DB data and manages the dropdown-filling function
+async function fetchigAndFillingManager(banlist) {
+  const [periods, numbers, combos, rem_temps, obm_temps] = await Promise.all([
+    supabase
+      .from("Service-period")
+      .select("*")
+      .then((r) => r.data),
+    supabase
+      .from("Service-number")
+      .select("*")
+      .then((r) => r.data),
+    supabase
+      .from("Combinations")
+      .select("*")
+      .then((r) => r.data),
+    supabase
+      .from("Templates")
+      .select("*")
+      .eq("type", true)
+      .then((r) => r.data),
+    supabase
+      .from("Templates")
+      .select("*")
+      .eq("type", false)
+      .then((r) => r.data),
+  ]);
+  const datasets = {
+    period: periods,
+    number: numbers,
+    combo: combos,
+    rem_temp: rem_temps,
+    obm_temp: obm_temps,
+  };
+
+  if (banlist.repair) {
+    document.querySelector("#remont_wrapper").classList.remove("allow");
+  } else {
+    document.querySelector("#remont_wrapper").classList.add("allow");
+
+    ///////////////////////// FILL LIST CALL EXAMPLE
+    fillList(
+      document.querySelector("#rem_temp"),
+      datasets.rem_temp,
+      banlist.repair_temp,
+      ["id", "name"],
+    );
+
+    fillList(
+      document.querySelector("#rem_combo"),
+      datasets.combo,
+      banlist.repair_combo,
+      ["index_repair", "option"],
+    );
+
+    if (!banlist.w_repair) {
+      document.querySelector("#top_check").querySelector("input").disabled =
+        false;
+
+      fillList(
+        document.querySelector("#rem_w_period"),
+        datasets.period,
+        banlist.repair_w_period,
+        ["index_wrepair", "month_number"],
+      );
+      fillList(
+        document.querySelector("#rem_w_number"),
+        datasets.number,
+        banlist.repair_w_number,
+        ["index_wrepair", "name"],
+      );
+    }
+
+    if (!banlist.unw_repair) {
+      document.querySelector("#unw_rem_check").querySelector("input").disabled =
+        false;
+
+      fillList(
+        document.querySelector("#rem_unw_period"),
+        datasets.period,
+        banlist.repair_unw_period,
+        ["index_unwrepair", "month_number"],
+      );
+      fillList(
+        document.querySelector("#rem_unw_number"),
+        datasets.number,
+        banlist.repair_unw_number,
+        ["index_unwrepair", "name"],
+      );
+    }
+  }
+  if (banlist.replace) {
+    document.querySelector("#obmin_wrapper").classList.remove("allow");
+  } else {
+    document.querySelector("#obmin_wrapper").classList.add("allow");
+
+    fillList(
+      document.querySelector("#obm_temp"),
+      datasets.obm_temp,
+      banlist.replace_temp,
+      ["id", "name"],
+    );
+    fillList(
+      document.querySelector("#obm_combo"),
+      datasets.combo,
+      banlist.replace_combo,
+      ["index_replace", "option"],
+    );
+
+    if (!banlist.w_replace) {
+      document.querySelector("#w_obm_check").disabled = false;
+
+      fillList(
+        document.querySelector("#obm_w_period"),
+        datasets.period,
+        banlist.replace_w_period,
+        ["index_wreplace", "month_number"],
+      );
+      fillList(
+        document.querySelector("#obm_w_number"),
+        datasets.number,
+        banlist.replace_w_number,
+        ["index_wreplace", "name"],
+      );
+    }
+
+    if (!banlist.unw_replace) {
+      document.querySelector("#unw_obm_check").querySelector("input").disabled =
+        false;
+
+      fillList(
+        document.querySelector("#obm_unw_period"),
+        datasets.period,
+        banlist.replace_unw_period,
+        ["index_unwreplace", "month_number"],
+      );
+      fillList(
+        document.querySelector("#obm_unw_number"),
+        datasets.number,
+        banlist.replace_unw_number,
+        ["index_unwreplace", "name"],
+      );
+    }
   }
 
-  const { data, error } = await query;
-  if (error) {
-    console.error(`Error fetching ${tableName}:`, error.message);
-    return [];
-  }
-
-  return data;
+  console.log(datasets);
 }
 
 // structures Incompatabilities into an object of exception to ignore when fillig out the dropdown
@@ -164,6 +310,9 @@ async function comprehendIncompatabilities(incomps) {
       if (inc.ban_warranty) {
         if (PerNum_are_null) {
           banned.w_repair = true;
+
+          document.querySelector("#top_check").querySelector("input").disabled =
+            true;
         } else {
           if (inc.service_period !== null)
             banned.repair_w_period.push(inc.service_period);
@@ -175,6 +324,9 @@ async function comprehendIncompatabilities(incomps) {
       if (inc.ban_unwarranty) {
         if (PerNum_are_null) {
           banned.unw_repair = true;
+          document
+            .querySelector("#unw_rem_check")
+            .querySelector("input").disabled = true;
         } else {
           if (inc.service_period !== null)
             banned.repair_unw_period.push(inc.service_period);
@@ -195,6 +347,7 @@ async function comprehendIncompatabilities(incomps) {
       if (inc.ban_warranty) {
         if (PerNum_are_null) {
           banned.w_replace = true;
+          document.querySelector("#w_obm_check").disabled = true;
         } else {
           if (inc.service_period !== null)
             banned.replace_w_period.push(inc.service_period);
@@ -206,6 +359,10 @@ async function comprehendIncompatabilities(incomps) {
       if (inc.ban_unwarranty) {
         if (PerNum_are_null) {
           banned.unw_replace = true;
+
+          document
+            .querySelector("#unw_obm_check")
+            .querySelector("input").disabled = true;
         } else {
           if (inc.service_period !== null)
             banned.replace_unw_period.push(inc.service_period);
@@ -217,7 +374,7 @@ async function comprehendIncompatabilities(incomps) {
   });
 
   console.log(banned);
-  return banned;
+  fetchigAndFillingManager(banned);
 }
 
 //fetches the incompatabilities table
@@ -342,10 +499,11 @@ options.forEach((option) => {
     });
 
     if (
-      progressBar.classList.contains("stage_1") ||
-      progressBar.classList.contains("stage_2") ||
-      progressBar.classList.contains("stage_3") ||
-      progressBar.classList.contains("stage_4")
+      (progressBar.classList.contains("stage_1") ||
+        progressBar.classList.contains("stage_2") ||
+        progressBar.classList.contains("stage_3") ||
+        progressBar.classList.contains("stage_4")) &&
+      option.classList.contains("allow") /////////////// change HEREeeeeeeeeeeeeeeeeeeeeee
     ) {
       body.classList.remove("remont", "obmin");
 
@@ -424,6 +582,7 @@ document.querySelectorAll(".dropdown_wrapper").forEach((wrapper) => {
   list.addEventListener("click", (e) => {
     if (e.target.classList.contains("dropdown_option")) {
       fill.textContent = e.target.textContent;
+      fill.setAttribute("price_index", e.target.getAttribute("price_index")); /////////////
       list.classList.remove("active");
     }
   });
