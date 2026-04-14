@@ -75,12 +75,12 @@ function updateProgress() {
   progressBar.classList.add("stage_1");
   progressText.textContent = "1/4 для продовження, оберіть тип послуги";
 
-let check = false;
-        document.querySelectorAll('input[type="checkbox"]').forEach((cb) => {
-          if (cb.checked) {
-            check = true;
-          }
-        });
+  let check = false;
+  document.querySelectorAll('input[type="checkbox"]').forEach((cb) => {
+    if (cb.checked) {
+      check = true;
+    }
+  });
 
   if (false) {
     //stage 4?
@@ -104,6 +104,120 @@ let check = false;
 
     return;
   }
+}
+
+//
+async function fetchAndFillTheList(tableName, bannedList) {
+  let query = supabase.from(tableName).select("*");
+
+  if (bannedList.length > 0) {
+    const list = `(${bannedList.join(",")})`;
+    query = query.not("id", "in", list);
+  }
+
+  const { data, error } = await query;
+  if (error) {
+    console.error(`Error fetching ${tableName}:`, error.message);
+    return [];
+  }
+
+  return data;
+}
+
+// structures Incompatabilities into an object of exception to ignore when fillig out the dropdown
+async function comprehendIncompatabilities(incomps) {
+  const banned = {
+    repair_w_period: [],
+    repair_w_number: [],
+    repair_unw_period: [],
+    repair_unw_number: [],
+    replace_w_period: [],
+    replace_w_number: [],
+    replace_unw_period: [],
+    replace_unw_number: [],
+    repair_combo: [],
+    repair_temp: [],
+    replace_combo: [],
+    replace_temp: [],
+    repair: false,
+    replace: false,
+    w_repair: false,
+    unw_repair: false,
+    w_replace: false,
+    unw_replace: false,
+  };
+
+  incomps.forEach((inc) => {
+    const PerNum_are_null =
+      inc.service_period == null && inc.service_number == null;
+    const bans_are_null =
+      PerNum_are_null && inc.combination == null && inc.template == null;
+
+    if (inc.ban_repair) {
+      if (inc.ban_warranty && inc.ban_unwarranty && bans_are_null) {
+        banned.repair = true;
+      }
+
+      if (inc.template !== null) banned.repair_temp.push(inc.template);
+      if (inc.combination !== null) banned.repair_combo.push(inc.combination);
+
+      if (inc.ban_warranty) {
+        if (PerNum_are_null) {
+          banned.w_repair = true;
+        } else {
+          if (inc.service_period !== null)
+            banned.repair_w_period.push(inc.service_period);
+          if (inc.service_number !== null)
+            banned.repair_w_number.push(inc.service_number);
+        }
+      }
+
+      if (inc.ban_unwarranty) {
+        if (PerNum_are_null) {
+          banned.unw_repair = true;
+        } else {
+          if (inc.service_period !== null)
+            banned.repair_unw_period.push(inc.service_period);
+          if (inc.service_number !== null)
+            banned.repair_unw_number.push(inc.service_number);
+        }
+      }
+    }
+
+    if (inc.ban_replace) {
+      if (inc.ban_warranty && inc.ban_unwarranty && bans_are_null) {
+        banned.replace = true;
+      }
+
+      if (inc.template !== null) banned.replace_temp.push(inc.template);
+      if (inc.combination !== null) banned.replace_combo.push(inc.combination);
+
+      if (inc.ban_warranty) {
+        if (PerNum_are_null) {
+          banned.w_replace = true;
+        } else {
+          if (inc.service_period !== null)
+            banned.replace_w_period.push(inc.service_period);
+          if (inc.service_number !== null)
+            banned.replace_w_number.push(inc.service_number);
+        }
+      }
+
+      if (inc.ban_unwarranty) {
+        if (PerNum_are_null) {
+          banned.unw_replace = true;
+        } else {
+          if (inc.service_period !== null)
+            banned.replace_unw_period.push(inc.service_period);
+          if (inc.service_number !== null)
+            banned.replace_unw_number.push(inc.service_number);
+        }
+      }
+    }
+  });
+
+  console.log(banned);
+  return banned;
 }
 
 //fetches the incompatabilities table
@@ -145,6 +259,7 @@ const fetchIncomps = async (device_id) => {
       return;
     }
     console.log(data);
+    comprehendIncompatabilities(data);
   }
 };
 
@@ -160,6 +275,10 @@ InputSearch.addEventListener("input", (e) => {
     device.element.classList.toggle("hide", !isVisible);
   });
 });
+
+//
+// PAGE START
+//
 
 fetchDevices();
 
@@ -224,7 +343,9 @@ options.forEach((option) => {
 
     if (
       progressBar.classList.contains("stage_1") ||
-      progressBar.classList.contains("stage_2")
+      progressBar.classList.contains("stage_2") ||
+      progressBar.classList.contains("stage_3") ||
+      progressBar.classList.contains("stage_4")
     ) {
       body.classList.remove("remont", "obmin");
 
@@ -279,6 +400,7 @@ document
     });
   });
 
+// dropdown lists script
 document.querySelectorAll(".dropdown_wrapper").forEach((wrapper) => {
   const main = wrapper.querySelector(".dropdown_main");
   const list = wrapper.querySelector(".dropdown_list");
@@ -307,6 +429,7 @@ document.querySelectorAll(".dropdown_wrapper").forEach((wrapper) => {
   });
 });
 
+// dropdown list de-select script
 document.addEventListener("click", () => {
   document.querySelectorAll(".dropdown_list").forEach((list) => {
     list.classList.remove("active");
