@@ -689,6 +689,16 @@ body.obmin .obmin-text {
     justify-content: center;
     cursor: pointer;
 }
+
+body.remont .configure.active {
+    background-color:#00C472;
+}
+body.obmin .configure.active {
+    background-color:#a50e36;
+}
+.configure.active .button_text{
+    color: rgb(255, 255, 255);
+}
 .button_text
 {
     margin: 0px 0px 3px 0px;
@@ -697,6 +707,7 @@ body.obmin .obmin-text {
     font-weight: 700;
     color: var(--dark-text-color);
 }
+
 .dropdown_wrapper{
     font-size: 14px;
     display: flex;
