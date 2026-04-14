@@ -46,20 +46,20 @@
                         </div>
                         <div class="search_field" search-line-container>
 
-                                <template search-device-temp>
-                                    <div class="search_field_element">
+                            <template search-device-temp>
+                                <div class="search_field_element">
                                     <div class="search_element_img">
                                         <img src="" alt="" class="device_img" line-device-image>
                                     </div>
                                     <div class="element_text">
                                         <div class="search_element_main_text">
                                             <h2 class="search_element_name" line-device-model>
-                                                
+
                                             </h2>
                                             <div class="search_element_atribute_container">
                                                 <p class="atribute" line-device-department></p>
                                                 <p class="atribute" line-device-articule></p>
-                            
+
                                             </div>
                                         </div>
                                         <div class="search_element_price_text">
@@ -68,7 +68,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                </template>
+                            </template>
 
                         </div>
                     </div>
@@ -145,7 +145,7 @@
 
                                     </div>
                                 </div>
-                                
+
                                 <div class="checkbox_wrapper" id="top_check">
                                     <label class="type_checkbox" id="remont_check">
                                         <input type="checkbox" data-controls="#w_list">
@@ -247,7 +247,7 @@
                                 </div>
                             </div>
                         </div>
-<h4 class="obmin_warning_text">Спочатку оберіть девайс</h4>
+                        <h4 class="obmin_warning_text">Спочатку оберіть девайс</h4>
                         <div class="wrapper_accordeon" id="obmin_accord">
                             <div class="posluga_wrapper" data-name="obmin" id="obmin_wrapper">
                                 <h3>Послуга по обміну техніки</h3>
@@ -380,7 +380,8 @@
                             </div>
                         </div>
                         <div class="warning">
-                            <p>Зверніть увагу, обидва варіанти послуги не можна зберегти одночасно, лише перемикатись між ними</p>
+                            <p>Зверніть увагу, обидва варіанти послуги не можна зберегти одночасно, лише перемикатись
+                                між ними</p>
                         </div>
                 </main>
                 <aside class="side_form" class="form">
@@ -419,7 +420,7 @@
                             <p class="final_price_text" id="final_price_value">YY,YYY₴</p>
                         </div>
                         <div class="button_container">
-                            <button class="configure" >
+                            <button class="configure" id="openPopup">
                                 <p class="button_text">Сформувати ключ</p>
                             </button>
                             <p class="small_nodevice_text">Покищо неможливо сформувати ключ, оберіть всі умови послуги
@@ -428,6 +429,22 @@
                     </div>
 
                 </aside>
+            </div>
+            <div class="popup_overlay" id="popup">
+                <div class="popup_window">
+                    <h3 class="popup_h">Формування послуги</h3>
+                    <p class="popup_p">Зверніть увагу, після цього її параметри не можна буде змінити</p>
+                    <div class="button_container">
+                        <div class="butt_container">
+                        <button class="popup_close submit">
+                            <p class="button_text_popup">Сформувати ключ</p>
+                        </button>
+                        <button class="popup_close">
+                            <p class="button_text_popup">Відмінити</p>
+                        </button>
+                        </div>
+                    </div>
+                </div>
             </div>
     </div>
     </section>

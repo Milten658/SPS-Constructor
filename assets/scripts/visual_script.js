@@ -17,3 +17,16 @@ if (search_input && search_field) {
   });
 
 }
+const openPopup = document.querySelector('.configure');
+const closeButtons = document.querySelectorAll('.popup_close');
+const popup = document.getElementById('popup');
+
+openPopup.addEventListener('click', () => {
+  popup.classList.add('active');
+});
+
+closeButtons.forEach(button => {
+  button.addEventListener('click', () => {
+    popup.classList.remove('active');
+  });
+});
