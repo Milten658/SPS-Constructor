@@ -606,7 +606,7 @@ SearchLineContainer.addEventListener("pointerup", (e) => {
   fetchIncomps(parseInt(text_id.replace(/\D/g, ""), 10));
 });
 
-// opening the service boxes of War/Unwar
+// opening the service boxes of Remont/Obmin
 options.forEach((option) => {
   option.addEventListener("click", () => {
     const form = option.nextElementSibling;
@@ -633,7 +633,12 @@ options.forEach((option) => {
       option.classList.contains("allow") /////////////// change HEREeeeeeeeeeeeeeeeeeeeeee
     ) {
       body.classList.remove("remont", "obmin");
-
+      // change text
+      const chooseText = option.querySelector(".choose_posluga");
+      if (chooseText) {
+        chooseText.textContent = !isOpen ? "згорнути" : "обрати";
+      }
+      // end
       if (!isOpen) {
         option.classList.add("active");
 
@@ -698,6 +703,7 @@ function updateDropdownFilledState(wrapper) {
   main.classList.toggle("filled", text !== "");
 }
 
+
 // dropdown lists script
 document.querySelectorAll(".dropdown_wrapper").forEach((wrapper) => {
   const main = wrapper.querySelector(".dropdown_main");
@@ -727,6 +733,7 @@ document.querySelectorAll(".dropdown_wrapper").forEach((wrapper) => {
       updateIndexes(list, fill);
 
       updateDropdownFilledState(wrapper);
+
     }
   });
 });
@@ -735,5 +742,8 @@ document.querySelectorAll(".dropdown_wrapper").forEach((wrapper) => {
 document.addEventListener("click", () => {
   document.querySelectorAll(".dropdown_list").forEach((list) => {
     list.classList.remove("active");
+
+
+
   });
 });
