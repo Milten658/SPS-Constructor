@@ -208,7 +208,7 @@ async function fetchigAndFillingManager(banlist) {
     if (!banlist.w_repair) {
       document.querySelector("#top_check").querySelector("input").disabled =
         false;
-        document.querySelector("#top_check").querySelector("input").classList.remove("disabled");
+      document.querySelector("#top_check").querySelector("input").classList.remove("disabled");
 
       fillList(
         document.querySelector("#rem_w_period"),
@@ -264,7 +264,7 @@ async function fetchigAndFillingManager(banlist) {
 
     if (!banlist.w_replace) {
       document.querySelector("#w_obm_check").disabled = false;
-document.querySelector("#w_obm_check").classList.remove("disabled");
+      document.querySelector("#w_obm_check").classList.remove("disabled");
 
       fillList(
         document.querySelector("#obm_w_period"),
@@ -283,7 +283,7 @@ document.querySelector("#w_obm_check").classList.remove("disabled");
     if (!banlist.unw_replace) {
       document.querySelector("#unw_obm_check").querySelector("input").disabled =
         false;
-        document.querySelector("#unw_obm_check").querySelector("input").classList.remove("disabled");
+      document.querySelector("#unw_obm_check").querySelector("input").classList.remove("disabled");
 
       fillList(
         document.querySelector("#obm_unw_period"),
@@ -346,7 +346,7 @@ async function comprehendIncompatabilities(incomps) {
 
           document.querySelector("#top_check").querySelector("input").disabled =
             true;
-            document.querySelector("#top_check").querySelector("input").classList.add("disabled");
+          document.querySelector("#top_check").querySelector("input").classList.add("disabled");
         } else {
           if (inc.service_period !== null)
             banned.repair_w_period.push(inc.service_period);
@@ -362,7 +362,7 @@ async function comprehendIncompatabilities(incomps) {
             .querySelector("#unw_rem_check")
             .querySelector("input").disabled = true;
 
-            document
+          document
             .querySelector("#unw_rem_check")
             .querySelector("input").classList.add("disabled");
         } else {
@@ -402,7 +402,7 @@ async function comprehendIncompatabilities(incomps) {
           document
             .querySelector("#unw_obm_check")
             .querySelector("input").disabled = true;
-            document
+          document
             .querySelector("#unw_obm_check")
             .querySelector("input").classList.add("disabled");
         } else {
@@ -521,6 +521,33 @@ SearchLineContainer.addEventListener("pointerup", (e) => {
   fetchIncomps(parseInt(text_id.replace(/\D/g, ""), 10));
 });
 
+// Opening remont/obmin forms function
+function updatePoslugaState(option) {
+  const form = option.nextElementSibling;
+  const isOpen = option.classList.contains("active");
+  const chooseText = option.querySelector(".choose_posluga");
+
+  if (chooseText) {
+    chooseText.textContent = isOpen ? "згорнути" : "обрати";
+  }
+
+  if (isOpen) {
+    const name = option.dataset.name;
+    if (name) {
+      body.classList.add(name);
+    }
+
+    form.style.height = "auto";
+    const height = form.scrollHeight;
+    form.style.height = "0px";
+
+    requestAnimationFrame(() => {
+      form.style.height = height + "px";
+    });
+  } else {
+    form.style.height = "0px";
+  }
+}
 // opening the service boxes of Remont/Obmin
 options.forEach((option) => {
   option.addEventListener("click", () => {
@@ -545,35 +572,15 @@ options.forEach((option) => {
         progressBar.classList.contains("stage_2") ||
         progressBar.classList.contains("stage_3") ||
         progressBar.classList.contains("stage_4")) &&
-      option.classList.contains("allow") /////////////// change HEREeeeeeeeeeeeeeeeeeeeeee
+      option.classList.contains("allow")
     ) {
       body.classList.remove("remont", "obmin");
-      // change text
-      const chooseText = option.querySelector(".choose_posluga");
-      if (chooseText) {
-        chooseText.textContent = !isOpen ? "згорнути" : "обрати";
-      }
-      // end
+
       if (!isOpen) {
         option.classList.add("active");
-
-        const name = option.dataset.name;
-        if (name) {
-          body.classList.add(name);
-        }
-
-        form.style.height = "auto";
-        const height = form.scrollHeight;
-
-        form.style.height = "0px";
-
-        requestAnimationFrame(() => {
-          form.style.height = height + "px";
-        });
-      } else {
-        form.style.height = "0px";
       }
 
+      updatePoslugaState(option);
       updateProgress();
     }
   });
