@@ -855,6 +855,7 @@ document.querySelectorAll(".dropdown_wrapper").forEach((wrapper) => {
 document.querySelectorAll(".reset_options").forEach((resetButton) => {
   resetButton.addEventListener("click", () => {
     resetAllDropdowns();
+    updateProgress(resetButton);
   });
 });
 // dropdown list de-select script
