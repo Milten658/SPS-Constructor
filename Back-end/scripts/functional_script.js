@@ -75,38 +75,46 @@ const fetchDevices = async () => {
 function checkProgress(list) {
   let empty_checks = true;
   let result = true;
+
   if (list) {
     const current_box = list.closest(".posluga_form");
-    console.log(current_box);
+    if (!current_box) return false;
 
-    current_box
-      .querySelectorAll('input[type="checkbox"][data-controls]')
-      .forEach((cb) => {
-        if (cb.checked == true) {
-          empty_checks = false;
-          current_box.querySelectorAll(cb.dataset.controls).forEach((list) => {
-            const fill = list.querySelector(".dropdown_fill");
-const index = Number(fill.getAttribute("price_index") || 0);
+    const checkedBoxes = current_box.querySelectorAll(
+      'input[type="checkbox"][data-controls]:checked'
+    );
 
-if (index === 0) {
-  result = false;
-}
-          });
+    if (checkedBoxes.length > 0) {
+      empty_checks = false;
+    }
+
+    checkedBoxes.forEach((cb) => {
+      current_box.querySelectorAll(cb.dataset.controls).forEach((block) => {
+        const fill = block.querySelector(".dropdown_fill");
+        const index = Number(fill?.getAttribute("price_index") || 0);
+
+        if (index === 0) {
+          result = false;
         }
       });
+    });
 
-    const option_list = current_box.querySelector(".other");
-    if (
-      option_list.classList.contains("active") &&
-      !option_list.querySelector(".dropdown_fill").getAttribute("price_index")
-    ) {
-      result = false;
+    if (checkedBoxes.length === 2) {
+      const comboList = current_box.querySelector("#rem_combo, #obm_combo");
+      const comboWrapper = comboList?.closest(".dropdown_wrapper");
+      const comboFill = comboWrapper?.querySelector(".dropdown_fill");
+      const comboIndex = Number(comboFill?.getAttribute("price_index") || 0);
+
+      if (comboIndex === 0) {
+        result = false;
+      }
     }
   }
+
   if (empty_checks) {
     result = false;
   }
-  console.log(result);
+
   return result;
 }
 
