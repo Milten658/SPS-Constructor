@@ -20,7 +20,7 @@ const pageSize = 1000;
 let devices = [];
 
 let replace_indexes = [0, 0, 0, 0, 0];
-let repair_indexes = [1, 0, 0, 0, 0];
+let repair_indexes = [0, 0, 0, 0, 0];
 
 // filling up the search options
 const fetchDevices = async () => {
@@ -72,12 +72,10 @@ const fetchDevices = async () => {
   });
 };
 
+//calculating the price and updating it on the page
 function updatePrice() {
-  // if body has remont - use repair_indexes
-  // if body has obmin - use replace_indexes
-  // main formula: (i1 + i2 + i3 + i4 + i5)/100 * device_price
   let sum = 0;
-  if (!body.classList.contains("remont")) {
+  if (body.classList.contains("remont")) {
     sum = repair_indexes.reduce((a, b) => a + b, 0);
   } else {
     if (body.classList.contains("obmin")) {
@@ -88,17 +86,89 @@ function updatePrice() {
   const numeric = Number(
     device_price.replace(/\s/g, "").replace("₴", "").replace(",", "."),
   );
-  console.log(numeric);
   const posluga_price = (numeric * sum) / 100;
-  document.querySelector("#posluga_value").textContent = posluga_price.toFixed(2) + "₴";
+  document.querySelector("#posluga_value").textContent =
+    posluga_price.toFixed(2) + "₴";
   document.querySelector("#posluga_value_percent").textContent = sum + "%";
   const total_price = posluga_price + numeric;
-  document.querySelector("#final_price_value").textContent = total_price.toFixed(2) + "₴";
+  document.querySelector("#final_price_value").textContent =
+    total_price.toFixed(2) + "₴";
+}
+
+//updates general price indexes depending on the dropdown filled and calls updatePrice()
+function updateIndexes(list, current) {
+  switch (list.getAttribute("id")) {
+    case "rem_w_period":
+    case "obm_w_period": {
+      if (body.classList.contains("remont")) {
+        repair_indexes[0] = Number(current.getAttribute("price_index"));
+      }
+      if (body.classList.contains("obmin")) {
+        replace_indexes[0] = Number(current.getAttribute("price_index"));
+      }
+      break;
+    }
+    case "rem_w_number":
+    case "obm_w_number": {
+      if (body.classList.contains("remont")) {
+        repair_indexes[1] = Number(current.getAttribute("price_index"));
+      }
+      if (body.classList.contains("obmin")) {
+        replace_indexes[1] = Number(current.getAttribute("price_index"));
+      }
+      break;
+    }
+    case "rem_unw_number":
+    case "obm_unw_number": {
+      if (body.classList.contains("remont")) {
+        repair_indexes[4] = Number(current.getAttribute("price_index"));
+      }
+      if (body.classList.contains("obmin")) {
+        replace_indexes[4] = Number(current.getAttribute("price_index"));
+      }
+      break;
+    }
+    case "rem_unw_period":
+    case "obm_unw_period": {
+      if (body.classList.contains("remont")) {
+        repair_indexes[3] = Number(current.getAttribute("price_index"));
+      }
+      if (body.classList.contains("obmin")) {
+        replace_indexes[3] = Number(current.getAttribute("price_index"));
+      }
+      break;
+    }
+    case "rem_combo":
+    case "obm_combo": {
+      if (body.classList.contains("remont")) {
+        repair_indexes[2] = Number(current.getAttribute("price_index"));
+      }
+      if (body.classList.contains("obmin")) {
+        replace_indexes[2] = Number(current.getAttribute("price_index"));
+      }
+      break;
+    }
+    case "rem_temp":
+    case "obm_temp": {
+      if (body.classList.contains("remont")) {
+        //template fetch and fill?
+      }
+      if (body.classList.contains("obmin")) {
+        //template fetch and fill?
+      }
+      break;
+    }
+
+    default:
+      break;
+  }
+  console.log(repair_indexes);
+  console.log(replace_indexes);
+  updatePrice();
 }
 
 //moving the progress bar on the page
 function updateProgress() {
-  updatePrice();
   const progressText = document.querySelector("#progress_text");
 
   progressBar.classList.remove("stage_1", "stage_2", "stage_3", "stage_4");
@@ -208,7 +278,10 @@ async function fetchigAndFillingManager(banlist) {
     if (!banlist.w_repair) {
       document.querySelector("#top_check").querySelector("input").disabled =
         false;
-      document.querySelector("#top_check").querySelector("input").classList.remove("disabled");
+      document
+        .querySelector("#top_check")
+        .querySelector("input")
+        .classList.remove("disabled");
 
       fillList(
         document.querySelector("#rem_w_period"),
@@ -227,8 +300,10 @@ async function fetchigAndFillingManager(banlist) {
     if (!banlist.unw_repair) {
       document.querySelector("#unw_rem_check").querySelector("input").disabled =
         false;
-      document.querySelector("#unw_rem_check").querySelector("input").classList.remove("disabled");
-
+      document
+        .querySelector("#unw_rem_check")
+        .querySelector("input")
+        .classList.remove("disabled");
 
       fillList(
         document.querySelector("#rem_unw_period"),
@@ -265,6 +340,7 @@ async function fetchigAndFillingManager(banlist) {
     if (!banlist.w_replace) {
       document.querySelector("#w_obm_check").disabled = false;
       document.querySelector("#w_obm_check").classList.remove("disabled");
+      document.querySelector("#w_obm_check").classList.remove("disabled");
 
       fillList(
         document.querySelector("#obm_w_period"),
@@ -283,7 +359,10 @@ async function fetchigAndFillingManager(banlist) {
     if (!banlist.unw_replace) {
       document.querySelector("#unw_obm_check").querySelector("input").disabled =
         false;
-      document.querySelector("#unw_obm_check").querySelector("input").classList.remove("disabled");
+      document
+        .querySelector("#unw_obm_check")
+        .querySelector("input")
+        .classList.remove("disabled");
 
       fillList(
         document.querySelector("#obm_unw_period"),
@@ -346,7 +425,10 @@ async function comprehendIncompatabilities(incomps) {
 
           document.querySelector("#top_check").querySelector("input").disabled =
             true;
-          document.querySelector("#top_check").querySelector("input").classList.add("disabled");
+          document
+            .querySelector("#top_check")
+            .querySelector("input")
+            .classList.add("disabled");
         } else {
           if (inc.service_period !== null)
             banned.repair_w_period.push(inc.service_period);
@@ -363,8 +445,10 @@ async function comprehendIncompatabilities(incomps) {
             .querySelector("input").disabled = true;
 
           document
+          document
             .querySelector("#unw_rem_check")
-            .querySelector("input").classList.add("disabled");
+            .querySelector("input")
+            .classList.add("disabled");
         } else {
           if (inc.service_period !== null)
             banned.repair_unw_period.push(inc.service_period);
@@ -403,8 +487,10 @@ async function comprehendIncompatabilities(incomps) {
             .querySelector("#unw_obm_check")
             .querySelector("input").disabled = true;
           document
+          document
             .querySelector("#unw_obm_check")
-            .querySelector("input").classList.add("disabled");
+            .querySelector("input")
+            .classList.add("disabled");
         } else {
           if (inc.service_period !== null)
             banned.replace_unw_period.push(inc.service_period);
@@ -516,8 +602,10 @@ SearchLineContainer.addEventListener("pointerup", (e) => {
   side_form.classList.add("active");
   document.querySelector(".config_container").classList.add("active");
   document.querySelector(".remont_warning_text").classList.remove("active");
+  document.querySelectorAll(".posluga_wrapper").forEach((wrap) => {});
 
   const text_id = device_form.querySelector("[articule]").textContent;
+  updatePrice();
   fetchIncomps(parseInt(text_id.replace(/\D/g, ""), 10));
 });
 
@@ -582,6 +670,7 @@ options.forEach((option) => {
 
       updatePoslugaState(option);
       updateProgress();
+      updatePrice();
     }
   });
 });
@@ -651,6 +740,7 @@ document.querySelectorAll(".dropdown_wrapper").forEach((wrapper) => {
       fill.textContent = e.target.textContent;
       fill.setAttribute("price_index", e.target.getAttribute("price_index")); /////////////
       list.classList.remove("active");
+      updateIndexes(list, fill);
 
       updateDropdownFilledState(wrapper);
 
