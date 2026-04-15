@@ -449,7 +449,7 @@ async function comprehendIncompatabilities(incomps) {
             .querySelector("#unw_rem_check")
             .querySelector("input").disabled = true;
 
-          document
+          document;
           document
             .querySelector("#unw_rem_check")
             .querySelector("input")
@@ -491,7 +491,7 @@ async function comprehendIncompatabilities(incomps) {
           document
             .querySelector("#unw_obm_check")
             .querySelector("input").disabled = true;
-          document
+          document;
           document
             .querySelector("#unw_obm_check")
             .querySelector("input")
@@ -553,6 +553,34 @@ const fetchIncomps = async (device_id) => {
   }
 };
 
+// Opening remont/obmin forms function
+function updatePoslugaState(option) {
+  const form = option.nextElementSibling;
+  const isOpen = option.classList.contains("active");
+  const chooseText = option.querySelector(".choose_posluga");
+
+  if (chooseText) {
+    chooseText.textContent = isOpen ? "згорнути" : "обрати";
+  }
+
+  if (isOpen) {
+    const name = option.dataset.name;
+    if (name) {
+      body.classList.add(name);
+    }
+
+    form.style.height = "auto";
+    const height = form.scrollHeight;
+    form.style.height = "0px";
+
+    requestAnimationFrame(() => {
+      form.style.height = height + "px";
+    });
+  } else {
+    form.style.height = "0px";
+  }
+}
+
 //search algorythm, that hides results that do not match with User's input
 InputSearch.addEventListener("input", (e) => {
   const value = e.target.value.toLowerCase();
@@ -607,40 +635,17 @@ SearchLineContainer.addEventListener("pointerup", (e) => {
   side_form.classList.add("active");
   document.querySelector(".config_container").classList.add("active");
   document.querySelector(".remont_warning_text").classList.remove("active");
-  document.querySelectorAll(".posluga_wrapper").forEach((wrap) => {});
+  document.querySelectorAll(".posluga_wrapper").forEach((wrap) => {
+    body.classList.remove("remont", "obmin");
+    wrap.classList.remove("active");
+    updatePoslugaState(wrap);
+  });
 
   const text_id = device_form.querySelector("[articule]").textContent;
   updatePrice();
   fetchIncomps(parseInt(text_id.replace(/\D/g, ""), 10));
 });
 
-// Opening remont/obmin forms function
-function updatePoslugaState(option) {
-  const form = option.nextElementSibling;
-  const isOpen = option.classList.contains("active");
-  const chooseText = option.querySelector(".choose_posluga");
-
-  if (chooseText) {
-    chooseText.textContent = isOpen ? "згорнути" : "обрати";
-  }
-
-  if (isOpen) {
-    const name = option.dataset.name;
-    if (name) {
-      body.classList.add(name);
-    }
-
-    form.style.height = "auto";
-    const height = form.scrollHeight;
-    form.style.height = "0px";
-
-    requestAnimationFrame(() => {
-      form.style.height = height + "px";
-    });
-  } else {
-    form.style.height = "0px";
-  }
-}
 // opening the service boxes of Remont/Obmin
 options.forEach((option) => {
   option.addEventListener("click", () => {
