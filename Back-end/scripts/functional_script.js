@@ -770,10 +770,54 @@ function updateDropdownFilledState(wrapper) {
   if (!main || !fill) return;
 
   const text = fill.textContent.trim();
+  const placeholder = fill.dataset.placeholder?.trim() || "";
 
-  main.classList.toggle("filled", text !== "");
+  main.classList.toggle("filled", text !== "" && text !== placeholder);
 }
+// reset function
+document.querySelectorAll(".dropdown_fill").forEach((fill) => {
+  fill.dataset.placeholder = fill.textContent.trim();
+});
 
+function resetAllDropdowns() {
+  document.querySelectorAll(".dropdown_wrapper").forEach((wrapper) => {
+    const fill = wrapper.querySelector(".dropdown_fill");
+    const list = wrapper.querySelector(".dropdown_list");
+
+    if (!fill) return;
+
+    if (wrapper.closest(".templates_row")) {
+      fill.textContent = fill.dataset.placeholder || "";
+      fill.setAttribute("price_index", "0");
+      updateDropdownFilledState(wrapper);
+      return;
+    }
+
+    fill.textContent = fill.dataset.placeholder || "";
+    fill.setAttribute("price_index", "0");
+
+    if (list) {
+      list.classList.remove("active");
+      updateIndexes(list, fill);
+    }
+
+    updateDropdownFilledState(wrapper);
+    wrapper.classList.remove("active");
+  });
+
+  document
+    .querySelectorAll('input[type="checkbox"][data-controls]')
+    .forEach((cb) => {
+      cb.checked = false;
+      cb.disabled = false;
+      cb.classList.remove("disabled");
+    });
+
+  document.querySelectorAll(".dropdown_list").forEach((list) => {
+    if (list.closest(".templates_row")) return;
+    list.classList.remove("active");
+  });
+}
 // dropdown lists script
 document.querySelectorAll(".dropdown_wrapper").forEach((wrapper) => {
   const main = wrapper.querySelector(".dropdown_main");
@@ -808,7 +852,11 @@ document.querySelectorAll(".dropdown_wrapper").forEach((wrapper) => {
     }
   });
 });
-
+document.querySelectorAll(".reset_options").forEach((resetButton) => {
+  resetButton.addEventListener("click", () => {
+    resetAllDropdowns();
+  });
+});
 // dropdown list de-select script
 document.addEventListener("click", () => {
   document.querySelectorAll(".dropdown_list").forEach((list) => {
