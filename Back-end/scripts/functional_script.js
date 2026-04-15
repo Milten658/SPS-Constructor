@@ -85,11 +85,12 @@ function checkProgress(list) {
         if (cb.checked == true) {
           empty_checks = false;
           current_box.querySelectorAll(cb.dataset.controls).forEach((list) => {
-            if (
-              !list.querySelector(".dropdown_fill").getAttribute("price_index")
-            ) {
-              result = false;
-            }
+            const fill = list.querySelector(".dropdown_fill");
+const index = Number(fill.getAttribute("price_index") || 0);
+
+if (index === 0) {
+  result = false;
+}
           });
         }
       });
@@ -212,34 +213,40 @@ function updateIndexes(list, current) {
 //moving the progress bar on the page
 function updateProgress(list) {
   const progressText = document.querySelector("#progress_text");
+  const openPopup = document.querySelector("#openPopup");
 
-      document.querySelector("#openPopup").classList.remove("active");
+  openPopup.classList.remove("active");
   progressBar.classList.remove("stage_1", "stage_2", "stage_3", "stage_4");
   progressBar.classList.add("stage_1");
   progressText.textContent = "1/4 для продовження, оберіть тип послуги";
 
+  const activeForm = document.querySelector(".posluga_wrapper.active + .posluga_form");
+
   let check = false;
-  document.querySelectorAll('input[type="checkbox"]').forEach((cb) => {
-    if (cb.checked) {
-      check = true;
-    }
-  });
-  console.log(list);
-  if (checkProgress(list)) {
+
+  if (activeForm) {
+    activeForm
+      .querySelectorAll('input[type="checkbox"][data-controls]')
+      .forEach((cb) => {
+        if (cb.checked) {
+          check = true;
+        }
+      });
+  }
+
+  if (activeForm && checkProgress(activeForm)) {
     progressBar.classList.remove("stage_1", "stage_2", "stage_3", "stage_4");
     progressBar.classList.add("stage_4");
     progressText.textContent =
       "4/4 для продовження, перевірте введені дані та натисніть кнопку";
 
-      document.querySelector("#openPopup").classList.add("active");
-
+    openPopup.classList.add("active");
     return;
   } else if (check) {
     progressBar.classList.remove("stage_1", "stage_2", "stage_3", "stage_4");
     progressBar.classList.add("stage_3");
     progressText.textContent =
       "3/4 для продовження, оберіть бажані параметри послуг";
-
     return;
   } else if (
     body.classList.contains("remont") ||
@@ -249,7 +256,6 @@ function updateProgress(list) {
     progressBar.classList.add("stage_2");
     progressText.textContent =
       "2/4 для продовження, оберіть між Гарантійними та Негарантійними випадками";
-
     return;
   }
 }
@@ -620,8 +626,10 @@ function updatePoslugaState(option) {
       form.style.height = height + "px";
     });
   } else {
-    form.style.height = "0px";
-  }
+  form.style.height = "0px";
+  body.classList.remove("remont", "obmin");
+  updateProgress();
+}
 }
 
 //search algorythm, that hides results that do not match with User's input
