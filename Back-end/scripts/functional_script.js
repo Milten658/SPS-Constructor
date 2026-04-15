@@ -97,54 +97,59 @@ function updatePrice() {
 
 //updates general price indexes depending on the dropdown filled and calls updatePrice()
 function updateIndexes(list, current) {
+  let index = Number(current.getAttribute("price_index"));
+  if (!list.closest(".dropdown_wrapper").classList.contains("active")) {
+    index = 0;
+  }
+
   switch (list.getAttribute("id")) {
     case "rem_w_period":
     case "obm_w_period": {
       if (body.classList.contains("remont")) {
-        repair_indexes[0] = Number(current.getAttribute("price_index"));
+        repair_indexes[0] = index;
       }
       if (body.classList.contains("obmin")) {
-        replace_indexes[0] = Number(current.getAttribute("price_index"));
+        replace_indexes[0] = index;
       }
       break;
     }
     case "rem_w_number":
     case "obm_w_number": {
       if (body.classList.contains("remont")) {
-        repair_indexes[1] = Number(current.getAttribute("price_index"));
+        repair_indexes[1] = index;
       }
       if (body.classList.contains("obmin")) {
-        replace_indexes[1] = Number(current.getAttribute("price_index"));
+        replace_indexes[1] = index;
       }
       break;
     }
     case "rem_unw_number":
     case "obm_unw_number": {
       if (body.classList.contains("remont")) {
-        repair_indexes[4] = Number(current.getAttribute("price_index"));
+        repair_indexes[4] = index;
       }
       if (body.classList.contains("obmin")) {
-        replace_indexes[4] = Number(current.getAttribute("price_index"));
+        replace_indexes[4] = index;
       }
       break;
     }
     case "rem_unw_period":
     case "obm_unw_period": {
       if (body.classList.contains("remont")) {
-        repair_indexes[3] = Number(current.getAttribute("price_index"));
+        repair_indexes[3] = index;
       }
       if (body.classList.contains("obmin")) {
-        replace_indexes[3] = Number(current.getAttribute("price_index"));
+        replace_indexes[3] = index;
       }
       break;
     }
     case "rem_combo":
     case "obm_combo": {
       if (body.classList.contains("remont")) {
-        repair_indexes[2] = Number(current.getAttribute("price_index"));
+        repair_indexes[2] = index;
       }
       if (body.classList.contains("obmin")) {
-        replace_indexes[2] = Number(current.getAttribute("price_index"));
+        replace_indexes[2] = index;
       }
       break;
     }
@@ -673,20 +678,28 @@ document
     current_box.querySelectorAll(cb.dataset.controls).forEach((list) => {
       cb.addEventListener("change", () => {
         list.classList.toggle("active");
+        updateIndexes(
+          list.querySelector(".dropdown_list"),
+          list.querySelector(".dropdown_fill"),
+        );
 
         let check = true;
+        const option_list = current_box.querySelector(".other");
         current_box.querySelectorAll('input[type="checkbox"]').forEach((cb) => {
           if (!cb.checked) {
             check = false;
           }
         });
         updateProgress();
-        console.log(check);
         if (check) {
-          current_box.querySelector(".other").classList.add("active");
+          option_list.classList.add("active");
         } else {
           current_box.querySelector(".other").classList.remove("active");
         }
+        updateIndexes(
+          option_list.querySelector(".dropdown_list"),
+          option_list.querySelector(".dropdown_fill"),
+        );
       });
     });
   });
@@ -702,7 +715,6 @@ function updateDropdownFilledState(wrapper) {
 
   main.classList.toggle("filled", text !== "");
 }
-
 
 // dropdown lists script
 document.querySelectorAll(".dropdown_wrapper").forEach((wrapper) => {
@@ -733,7 +745,6 @@ document.querySelectorAll(".dropdown_wrapper").forEach((wrapper) => {
       updateIndexes(list, fill);
 
       updateDropdownFilledState(wrapper);
-
     }
   });
 });
@@ -742,8 +753,5 @@ document.querySelectorAll(".dropdown_wrapper").forEach((wrapper) => {
 document.addEventListener("click", () => {
   document.querySelectorAll(".dropdown_list").forEach((list) => {
     list.classList.remove("active");
-
-
-
   });
 });
