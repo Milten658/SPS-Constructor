@@ -72,6 +72,43 @@ const fetchDevices = async () => {
   });
 };
 
+function checkProgress(list) {
+  let empty_checks = true;
+  let result = true;
+  if (list) {
+    const current_box = list.closest(".posluga_form");
+    console.log(current_box);
+
+    current_box
+      .querySelectorAll('input[type="checkbox"][data-controls]')
+      .forEach((cb) => {
+        if (cb.checked == true) {
+          empty_checks = false;
+          current_box.querySelectorAll(cb.dataset.controls).forEach((list) => {
+            if (
+              !list.querySelector(".dropdown_fill").getAttribute("price_index")
+            ) {
+              result = false;
+            }
+          });
+        }
+      });
+
+    const option_list = current_box.querySelector(".other");
+    if (
+      option_list.classList.contains("active") &&
+      !option_list.querySelector(".dropdown_fill").getAttribute("price_index")
+    ) {
+      result = false;
+    }
+  }
+  if (empty_checks) {
+    result = false;
+  }
+  console.log(result);
+  return result;
+}
+
 //calculating the price and updating it on the page
 function updatePrice() {
   let sum = 0;
@@ -173,7 +210,7 @@ function updateIndexes(list, current) {
 }
 
 //moving the progress bar on the page
-function updateProgress() {
+function updateProgress(list) {
   const progressText = document.querySelector("#progress_text");
 
   progressBar.classList.remove("stage_1", "stage_2", "stage_3", "stage_4");
@@ -186,9 +223,12 @@ function updateProgress() {
       check = true;
     }
   });
-
-  if (false) {
-    //stage 4?
+  console.log(list);
+  if (checkProgress(list)) {
+    progressBar.classList.remove("stage_1", "stage_2", "stage_3", "stage_4");
+    progressBar.classList.add("stage_4");
+    progressText.textContent =
+      "4/4 для продовження, перевірте введені дані та натисніть кнопку";
 
     return;
   } else if (check) {
@@ -679,7 +719,7 @@ options.forEach((option) => {
       }
 
       updatePoslugaState(option);
-      updateProgress();
+      updateProgress(form);
       updatePrice();
     }
   });
@@ -705,11 +745,11 @@ document
             check = false;
           }
         });
-        updateProgress();
+        updateProgress(cb);
         if (check) {
           option_list.classList.add("active");
         } else {
-          current_box.querySelector(".other").classList.remove("active");
+          option_list.classList.remove("active");
         }
         updateIndexes(
           option_list.querySelector(".dropdown_list"),
@@ -758,6 +798,8 @@ document.querySelectorAll(".dropdown_wrapper").forEach((wrapper) => {
       fill.setAttribute("price_index", e.target.getAttribute("price_index")); /////////////
       list.classList.remove("active");
       updateIndexes(list, fill);
+      console.log(fill);
+      updateProgress(fill);
 
       updateDropdownFilledState(wrapper);
     }
