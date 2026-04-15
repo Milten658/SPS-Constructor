@@ -213,6 +213,7 @@ function updateIndexes(list, current) {
 function updateProgress(list) {
   const progressText = document.querySelector("#progress_text");
 
+      document.querySelector("#openPopup").classList.remove("active");
   progressBar.classList.remove("stage_1", "stage_2", "stage_3", "stage_4");
   progressBar.classList.add("stage_1");
   progressText.textContent = "1/4 для продовження, оберіть тип послуги";
@@ -229,6 +230,8 @@ function updateProgress(list) {
     progressBar.classList.add("stage_4");
     progressText.textContent =
       "4/4 для продовження, перевірте введені дані та натисніть кнопку";
+
+      document.querySelector("#openPopup").classList.add("active");
 
     return;
   } else if (check) {
