@@ -558,6 +558,19 @@ document
     });
   });
 
+  // dropdown fill change function
+function updateDropdownFilledState(wrapper) {
+  const main = wrapper.querySelector(".dropdown_main");
+  const fill = wrapper.querySelector(".dropdown_fill");
+
+  if (!main || !fill) return;
+
+  const text = fill.textContent.trim();
+
+  main.classList.toggle("filled", text !== "");
+}
+
+
 // dropdown lists script
 document.querySelectorAll(".dropdown_wrapper").forEach((wrapper) => {
   const main = wrapper.querySelector(".dropdown_main");
@@ -584,6 +597,9 @@ document.querySelectorAll(".dropdown_wrapper").forEach((wrapper) => {
       fill.textContent = e.target.textContent;
       fill.setAttribute("price_index", e.target.getAttribute("price_index")); /////////////
       list.classList.remove("active");
+
+          updateDropdownFilledState(wrapper);
+
     }
   });
 });
@@ -592,5 +608,8 @@ document.querySelectorAll(".dropdown_wrapper").forEach((wrapper) => {
 document.addEventListener("click", () => {
   document.querySelectorAll(".dropdown_list").forEach((list) => {
     list.classList.remove("active");
+
+
+
   });
 });

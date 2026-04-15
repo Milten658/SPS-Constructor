@@ -740,6 +740,9 @@ body.obmin .configure.active {
     cursor: pointer;
     color: #C5C5C5;
 }
+.dropdown_main.filled{
+    border-color: var(--main-text-change-color);
+}
 .dropdown_arrow{
     width: 30px;
     height: 30px;
@@ -761,6 +764,10 @@ body.obmin .configure.active {
 }
 .dropdown_fill{
     padding-left: 10px;
+}
+.dropdown_main.filled .dropdown_fill {
+  color: white;
+  font-weight: 500;
 }
 .dropdown_list {
      position: absolute;
@@ -850,7 +857,7 @@ padding: 5px 18px 0px 18px;
   background-color: var(--main-text-change-color);
 }
 .type_checkbox:hover .custom_box {
-  border-color: #666;
+  border-color: #a2a2a2;
 }
 .type_checkbox:hover .checkbox_text {
   color: var(--main-text-color);
