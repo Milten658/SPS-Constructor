@@ -19,6 +19,9 @@ const pageSize = 1000;
 
 let devices = [];
 
+let replace_indexes = [0, 0, 0, 0, 0];
+let repair_indexes = [1, 0, 0, 0, 0];
+
 // filling up the search options
 const fetchDevices = async () => {
   let all = [];
@@ -69,8 +72,33 @@ const fetchDevices = async () => {
   });
 };
 
+function updatePrice() {
+  // if body has remont - use repair_indexes
+  // if body has obmin - use replace_indexes
+  // main formula: (i1 + i2 + i3 + i4 + i5)/100 * device_price
+  let sum = 0;
+  if (!body.classList.contains("remont")) {
+    sum = repair_indexes.reduce((a, b) => a + b, 0);
+  } else {
+    if (body.classList.contains("obmin")) {
+      sum = replace_indexes.reduce((a, b) => a + b, 0);
+    }
+  }
+  const device_price = document.querySelector("#device_value").textContent;
+  const numeric = Number(
+    device_price.replace(/\s/g, "").replace("₴", "").replace(",", "."),
+  );
+  console.log(numeric);
+  const posluga_price = (numeric * sum) / 100;
+  document.querySelector("#posluga_value").textContent = posluga_price.toFixed(2) + "₴";
+  document.querySelector("#posluga_value_percent").textContent = sum + "%";
+  const total_price = posluga_price + numeric;
+  document.querySelector("#final_price_value").textContent = total_price.toFixed(2) + "₴";
+}
+
 //moving the progress bar on the page
 function updateProgress() {
+  updatePrice();
   const progressText = document.querySelector("#progress_text");
 
   progressBar.classList.remove("stage_1", "stage_2", "stage_3", "stage_4");
@@ -180,6 +208,7 @@ async function fetchigAndFillingManager(banlist) {
     if (!banlist.w_repair) {
       document.querySelector("#top_check").querySelector("input").disabled =
         false;
+        document.querySelector("#top_check").querySelector("input").classList.remove("disabled");
 
       fillList(
         document.querySelector("#rem_w_period"),
@@ -198,6 +227,8 @@ async function fetchigAndFillingManager(banlist) {
     if (!banlist.unw_repair) {
       document.querySelector("#unw_rem_check").querySelector("input").disabled =
         false;
+      document.querySelector("#unw_rem_check").querySelector("input").classList.remove("disabled");
+
 
       fillList(
         document.querySelector("#rem_unw_period"),
@@ -233,6 +264,7 @@ async function fetchigAndFillingManager(banlist) {
 
     if (!banlist.w_replace) {
       document.querySelector("#w_obm_check").disabled = false;
+document.querySelector("#w_obm_check").classList.remove("disabled");
 
       fillList(
         document.querySelector("#obm_w_period"),
@@ -251,6 +283,7 @@ async function fetchigAndFillingManager(banlist) {
     if (!banlist.unw_replace) {
       document.querySelector("#unw_obm_check").querySelector("input").disabled =
         false;
+        document.querySelector("#unw_obm_check").querySelector("input").classList.remove("disabled");
 
       fillList(
         document.querySelector("#obm_unw_period"),
@@ -313,6 +346,7 @@ async function comprehendIncompatabilities(incomps) {
 
           document.querySelector("#top_check").querySelector("input").disabled =
             true;
+            document.querySelector("#top_check").querySelector("input").classList.add("disabled");
         } else {
           if (inc.service_period !== null)
             banned.repair_w_period.push(inc.service_period);
@@ -327,6 +361,10 @@ async function comprehendIncompatabilities(incomps) {
           document
             .querySelector("#unw_rem_check")
             .querySelector("input").disabled = true;
+
+            document
+            .querySelector("#unw_rem_check")
+            .querySelector("input").classList.add("disabled");
         } else {
           if (inc.service_period !== null)
             banned.repair_unw_period.push(inc.service_period);
@@ -348,6 +386,7 @@ async function comprehendIncompatabilities(incomps) {
         if (PerNum_are_null) {
           banned.w_replace = true;
           document.querySelector("#w_obm_check").disabled = true;
+          document.querySelector("#w_obm_check").classList.add("disabled");
         } else {
           if (inc.service_period !== null)
             banned.replace_w_period.push(inc.service_period);
@@ -363,6 +402,9 @@ async function comprehendIncompatabilities(incomps) {
           document
             .querySelector("#unw_obm_check")
             .querySelector("input").disabled = true;
+            document
+            .querySelector("#unw_obm_check")
+            .querySelector("input").classList.add("disabled");
         } else {
           if (inc.service_period !== null)
             banned.replace_unw_period.push(inc.service_period);
