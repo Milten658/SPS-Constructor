@@ -21,6 +21,10 @@ let devices = [];
 
 let replace_indexes = [0, 0, 0, 0, 0];
 let repair_indexes = [0, 0, 0, 0, 0];
+let templatesStore = {
+  rem: [],
+  obm: [],
+};
 
 // filling up the search options
 const fetchDevices = async () => {
@@ -199,13 +203,24 @@ function updateIndexes(list, current) {
       }
       break;
     }
-    case "rem_temp":
+     case "rem_temp":
     case "obm_temp": {
-      if (body.classList.contains("remont")) {
-        //template fetch and fill?
+      const selectedTemplateId = current.getAttribute("data-id");
+
+      if (list.getAttribute("id") === "rem_temp") {
+        const template = templatesStore.rem.find(
+          (item) => String(item.id) === String(selectedTemplateId),
+        );
+
+        applyTemplate(template, "remont");
       }
-      if (body.classList.contains("obmin")) {
-        //template fetch and fill?
+
+      if (list.getAttribute("id") === "obm_temp") {
+        const template = templatesStore.obm.find(
+          (item) => String(item.id) === String(selectedTemplateId),
+        );
+
+        applyTemplate(template, "obmin");
       }
       break;
     }
@@ -271,18 +286,19 @@ function updateProgress(list) {
 //function that fills the list with given data
 function fillList(list, data, banned, columns) {
   list.innerHTML = "";
+
   data.forEach((row) => {
     if (!banned.includes(row.id)) {
       const line = DropdownOptionTemplate.content.cloneNode(true).children[0];
 
-      line.setAttribute("price_index", `${row[columns[0]]}`);
+      line.setAttribute("price_index", `${row[columns[0]] ?? 0}`);
+      line.setAttribute("data-id", `${row.id}`);
       line.textContent = row[columns[1]];
 
       list.append(line);
     }
   });
 }
-
 //the manager that processes the banlist, fetches DB data and manages the dropdown-filling function
 async function fetchigAndFillingManager(banlist) {
   const [periods, numbers, combos, rem_temps, obm_temps] = await Promise.all([
@@ -316,6 +332,8 @@ async function fetchigAndFillingManager(banlist) {
     rem_temp: rem_temps,
     obm_temp: obm_temps,
   };
+  templatesStore.rem = rem_temps || [];
+templatesStore.obm = obm_temps || [];
 
   if (banlist.repair) {
     document.querySelector("#remont_wrapper").classList.remove("allow");
@@ -821,13 +839,12 @@ function resetAllDropdowns() {
     wrapper.classList.remove("active");
   });
 
-  document
-    .querySelectorAll('input[type="checkbox"][data-controls]')
-    .forEach((cb) => {
-      cb.checked = false;
-      cb.disabled = false;
-      cb.classList.remove("disabled");
-    });
+document
+  .querySelectorAll('input[type="checkbox"][data-controls]')
+  .forEach((cb) => {
+    cb.checked = false;
+    cb.classList.remove("checked");
+  });
 
   document.querySelectorAll(".dropdown_list").forEach((list) => {
     if (list.closest(".templates_row")) return;
@@ -858,7 +875,8 @@ document.querySelectorAll(".dropdown_wrapper").forEach((wrapper) => {
   list.addEventListener("click", (e) => {
     if (e.target.classList.contains("dropdown_option")) {
       fill.textContent = e.target.textContent;
-      fill.setAttribute("price_index", e.target.getAttribute("price_index")); /////////////
+fill.setAttribute("price_index", e.target.getAttribute("price_index") || "0");
+fill.setAttribute("data-id", e.target.getAttribute("data-id") || ""); /////////////
       list.classList.remove("active");
       updateIndexes(list, fill);
       console.log(fill);
@@ -880,3 +898,224 @@ document.addEventListener("click", () => {
     list.classList.remove("active");
   });
 });
+
+
+function getCheckboxElement(selector) {
+  const el = document.querySelector(selector);
+  if (!el) return null;
+
+  if (el.matches('input[type="checkbox"]')) return el;
+
+  return el.querySelector('input[type="checkbox"]');
+}
+
+function setCheckboxState(checkbox, shouldCheck) {
+  if (!checkbox || checkbox.disabled) return;
+
+  const currentBox = checkbox.closest(".posluga_form");
+  if (!currentBox) return;
+
+  const wrappers = currentBox.querySelectorAll(checkbox.dataset.controls || "");
+
+  checkbox.checked = shouldCheck;
+
+  wrappers.forEach((wrapper) => {
+    wrapper.classList.toggle("active", shouldCheck);
+
+    if (!shouldCheck) {
+      const list = wrapper.querySelector(".dropdown_list");
+      const fill = wrapper.querySelector(".dropdown_fill");
+
+      if (fill) {
+        fill.textContent = fill.dataset.placeholder || "";
+        fill.setAttribute("price_index", "0");
+        fill.removeAttribute("data-id");
+      }
+
+      if (list && fill) {
+        updateIndexes(list, fill);
+      }
+
+      updateDropdownFilledState(wrapper);
+    }
+  });
+
+  const optionList = currentBox.querySelector(".other");
+  if (optionList) {
+    const allChecked = [
+      ...currentBox.querySelectorAll('input[type="checkbox"][data-controls]'),
+    ].every((cb) => cb.checked);
+
+    optionList.classList.toggle("active", allChecked);
+
+    if (!allChecked) {
+      const comboList = optionList.querySelector(".dropdown_list");
+      const comboFill = optionList.querySelector(".dropdown_fill");
+
+      if (comboFill) {
+        comboFill.textContent = comboFill.dataset.placeholder || "";
+        comboFill.setAttribute("price_index", "0");
+        comboFill.removeAttribute("data-id");
+      }
+
+      if (comboList && comboFill) {
+        updateIndexes(comboList, comboFill);
+      }
+
+      updateDropdownFilledState(optionList);
+    }
+  }
+}
+
+function selectDropdownOptionById(listSelector, optionId) {
+  if (optionId == null || optionId === "") return false;
+
+  const list = document.querySelector(listSelector);
+  if (!list) return false;
+
+  const wrapper = list.closest(".dropdown_wrapper");
+  const fill = wrapper?.querySelector(".dropdown_fill");
+  if (!wrapper || !fill) return false;
+
+  const option = [...list.querySelectorAll(".dropdown_option")].find(
+    (item) => String(item.getAttribute("data-id")) === String(optionId),
+  );
+
+  if (!option) return false;
+
+  fill.textContent = option.textContent;
+  fill.setAttribute("price_index", option.getAttribute("price_index") || "0");
+  fill.setAttribute("data-id", option.getAttribute("data-id") || "");
+
+  updateIndexes(list, fill);
+  updateDropdownFilledState(wrapper);
+
+  return true;
+}
+
+function clearCurrentServiceForm(form) {
+  if (!form) return;
+
+  form.querySelectorAll('input[type="checkbox"][data-controls]').forEach((cb) => {
+    cb.checked = false;
+  });
+
+  form.querySelectorAll(".dropdown_wrapper").forEach((wrapper) => {
+    if (wrapper.closest(".templates_row")) return;
+
+    const fill = wrapper.querySelector(".dropdown_fill");
+    const list = wrapper.querySelector(".dropdown_list");
+
+    if (fill) {
+      fill.textContent = fill.dataset.placeholder || "";
+      fill.setAttribute("price_index", "0");
+      fill.removeAttribute("data-id");
+    }
+
+    if (list && fill) {
+      updateIndexes(list, fill);
+    }
+
+    updateDropdownFilledState(wrapper);
+    wrapper.classList.remove("active");
+  });
+
+  const controlledWrappers = form.querySelectorAll(
+    '[data-controls=".top"], [data-controls=".bottom"]',
+  );
+  controlledWrappers.forEach((cb) => {
+    const targets = form.querySelectorAll(cb.dataset.controls || "");
+    targets.forEach((target) => target.classList.remove("active"));
+  });
+
+  const other = form.querySelector(".other");
+  if (other) {
+    other.classList.remove("active");
+
+    const comboFill = other.querySelector(".dropdown_fill");
+    const comboList = other.querySelector(".dropdown_list");
+
+    if (comboFill) {
+      comboFill.textContent = comboFill.dataset.placeholder || "";
+      comboFill.setAttribute("price_index", "0");
+      comboFill.removeAttribute("data-id");
+    }
+
+    if (comboList && comboFill) {
+      updateIndexes(comboList, comboFill);
+    }
+
+    updateDropdownFilledState(other);
+  }
+}
+
+function applyTemplate(template, serviceType) {
+  if (!template) return;
+
+  const form = document.querySelector(".posluga_wrapper.active + .posluga_form");
+  if (!form) return;
+
+  clearCurrentServiceForm(form);
+
+  const isRepair = serviceType === "remont";
+
+  const selectors = isRepair
+    ? {
+        wCheckbox: "#top_check",
+        unwCheckbox: "#unw_rem_check",
+        wPeriod: "#rem_w_period",
+        wNumber: "#rem_w_number",
+        unwPeriod: "#rem_unw_period",
+        unwNumber: "#rem_unw_number",
+        combo: "#rem_combo",
+      }
+    : {
+        wCheckbox: "#w_obm_check",
+        unwCheckbox: "#unw_obm_check",
+        wPeriod: "#obm_w_period",
+        wNumber: "#obm_w_number",
+        unwPeriod: "#obm_unw_period",
+        unwNumber: "#obm_unw_number",
+        combo: "#obm_combo",
+      };
+
+  const hasWarranty =
+    template.w_number != null || template.w_period != null;
+
+  const hasUnwarranty =
+    template.unw_number != null || template.unw_period != null;
+
+  const wCheckbox = getCheckboxElement(selectors.wCheckbox);
+  const unwCheckbox = getCheckboxElement(selectors.unwCheckbox);
+
+  if (hasWarranty) {
+    setCheckboxState(wCheckbox, true);
+  }
+
+  if (hasUnwarranty) {
+    setCheckboxState(unwCheckbox, true);
+  }
+
+  if (template.w_period != null) {
+    selectDropdownOptionById(selectors.wPeriod, template.w_period);
+  }
+
+  if (template.w_number != null) {
+    selectDropdownOptionById(selectors.wNumber, template.w_number);
+  }
+
+  if (template.unw_period != null) {
+    selectDropdownOptionById(selectors.unwPeriod, template.unw_period);
+  }
+
+  if (template.unw_number != null) {
+    selectDropdownOptionById(selectors.unwNumber, template.unw_number);
+  }
+
+  if (template.comb != null && hasWarranty && hasUnwarranty) {
+    selectDropdownOptionById(selectors.combo, template.comb);
+  }
+
+  updateProgress(form);
+  updatePrice();
+}
