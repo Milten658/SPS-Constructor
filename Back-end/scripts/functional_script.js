@@ -486,17 +486,22 @@ async function comprehendIncompatabilities(incomps) {
   };
 
   incomps.forEach((inc) => {
-    const PerNum_are_null =
-      inc.service_period == null && inc.service_number == null;
-    const bans_are_null =
-      PerNum_are_null && inc.combination == null && inc.template == null;
+  const PerNum_are_null =
+    inc.service_period == null && inc.service_number == null;
 
-    if (inc.ban_repair) {
+  const bans_are_null =
+    PerNum_are_null && inc.combination == null && inc.template == null;
+
+  if (inc.template !== null) {
+    banned.repair_temp.push(inc.template);
+    banned.replace_temp.push(inc.template);
+  }
+
+  if (inc.ban_repair) {
       if (inc.ban_warranty && inc.ban_unwarranty && bans_are_null) {
         banned.repair = true;
       }
 
-      if (inc.template !== null) banned.repair_temp.push(inc.template);
       if (inc.combination !== null) banned.repair_combo.push(inc.combination);
 
       if (inc.ban_warranty) {
@@ -543,7 +548,6 @@ async function comprehendIncompatabilities(incomps) {
         banned.replace = true;
       }
 
-      if (inc.template !== null) banned.replace_temp.push(inc.template);
       if (inc.combination !== null) banned.replace_combo.push(inc.combination);
 
       if (inc.ban_warranty) {
